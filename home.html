@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMEA College of Arts & Science</title>
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #d4fc79, #96e6a1);
+    }
+
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .nav {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: black;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    /* Container and Tree Item Styles */
+    .container {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px; /* Small gap between boxes */
+    }
+
+    .tree-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background: yellow;
+      color: black;
+      font-weight: bold;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+      justify-content: flex-start;
+      width: 100%;
+    }
+
+    .tree-item span {
+      display: inline-block;
+      width: 30px;
+      text-align: left;
+      margin-right: 10px;
+    }
+
+    /* Full-width alignment */
+    .tree-item {
+      box-sizing: border-box; /* Ensures padding fits within the width */
+    }
+
+    /* Responsive Adjustments */
+    @media (min-width: 768px) {
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .tree-item {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">EMEA COLLEGE OF ARTS & SCIENCE</div>
+    <div class="nav">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="#" class="tree-item"><span>1</span>ROYSTONIA REGIA</a>
+    <a href="#" class="tree-item"><span>2</span>PSIDIUM GUAJAVA</a>
+    <a href="#" class="tree-item"><span>3</span>BOUGAINVILLEA SPECTABILIS</a>
+    <!-- Add placeholders for future tree names -->
+    <a href="#" class="tree-item"><span>4</span>Tree Name Placeholder</a>
+    <a href="#" class="tree-item"><span>5</span>Tree Name Placeholder</a>
+    <a href="#" class="tree-item"><span>6</span>Tree Name Placeholder</a>
+    <!-- Add more items up to 80 -->
+  </div>
+</body>
+</html>
