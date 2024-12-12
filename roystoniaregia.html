@@ -4,32 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roystonia Regia</title>
-    <link rel="stylesheet" href="styles.css"> </head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #d5f4c3, #ffffff);
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .header a {
+            text-decoration: none;
+            color: black;
+            margin-left: 20px;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 30px auto;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .info {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 20px;
+            text-align: left;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .info div {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .info div span {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .image {
+            margin-top: 20px;
+        }
+
+        .image img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
 <body>
-    <header>
-        <img src="college-logo.png" alt="EMEA College of Arts & Science Logo">
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <div class="card">
-            <h2>ROYSTONIA REGIA</h2>
-            <ul>
-                <li><strong>Scientific Name:</strong> ROYSTONIA REGIA</li>
-                <li><strong>Family:</strong> ARECACEAE</li>
-                <li><strong>Common Name:</strong> ROYAL PALM - താളമരം</li>
-                <li><strong>Native Range:</strong> TROP. AMERICA</li>
-            </ul>
-            <img src="royal-palm.jpg" alt="Royal Palm Tree">
+    <div class="header">
+        <h1>EMEA COLLEGE OF ARTS & SCIENCE</h1>
+        <div>
+            <a href="#">Home</a>
+            <a href="#">About</a>
         </div>
-    </main>
+    </div>
 
-    <footer>
-        </footer>
+    <div class="content">
+        <div class="title">ROYSTONIA REGIA</div>
+
+        <div class="info">
+            <div><span>SCIENTIFIC NAME</span>: ROYSTONIA REGIA</div>
+            <div><span>FAMILY</span>: ARECACEAE</div>
+            <div><span>COMMON NAME</span>: ROYAL PALM - രാജപ്പന</div>
+            <div><span>NATIVE RANGE</span>: TROP. AMERICA</div>
+        </div>
+
+        <div class="image">
+            <img src="https://via.placeholder.com/200" alt="Roystonia Regia">
+        </div>
+    </div>
 </body>
 </html>
