@@ -1,7 +1,13 @@
 
+
 export interface Tree {
   id: string;
   name: string;
+  scientific_name: string;
+  family: string;
+  common_name_english: string;
+  common_name_malayalam?: string;
+  native_range?: string;
   species: string;
   location: string;
   description: string;
@@ -11,6 +17,11 @@ export interface Tree {
 
 export interface TreeFormData {
   name: string;
+  scientific_name: string;
+  family: string;
+  common_name_english: string;
+  common_name_malayalam?: string;
+  native_range?: string;
   species: string;
   location: string;
   description: string;
@@ -26,5 +37,7 @@ export interface ApiResponse<T> {
 export type FilterOptions = {
   species?: string;
   location?: string;
+  family?: string;
   searchQuery?: string;
 };
+

@@ -7,13 +7,18 @@ import QRCodeGenerator from '@/components/QRCodeGenerator';
 import { TreeFormData, Tree } from '@/types';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 import { Upload, X } from 'lucide-react';
 
 const AddTree = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<TreeFormData>({
     name: '',
+    scientific_name: '',
+    family: '',
+    common_name_english: '',
+    common_name_malayalam: '',
+    native_range: '',
     species: '',
     location: '',
     description: '',
@@ -71,6 +76,21 @@ const AddTree = () => {
     // Basic validation
     if (!formData.name.trim()) {
       toast.error('Please enter the tree name');
+      return;
+    }
+    
+    if (!formData.scientific_name.trim()) {
+      toast.error('Please enter the scientific name');
+      return;
+    }
+    
+    if (!formData.family.trim()) {
+      toast.error('Please enter the family');
+      return;
+    }
+    
+    if (!formData.common_name_english.trim()) {
+      toast.error('Please enter the common English name');
       return;
     }
     
@@ -145,8 +165,30 @@ const AddTree = () => {
               <div className="space-y-4">
                 <div>
                   <h3 className="font-medium">{newTree.name}</h3>
-                  <p className="text-muted-foreground">{newTree.species}</p>
+                  <p className="italic text-muted-foreground">{newTree.scientific_name}</p>
                 </div>
+                
+                <div>
+                  <p className="text-sm font-medium">Family</p>
+                  <p className="text-muted-foreground">{newTree.family}</p>
+                </div>
+                
+                <div>
+                  <p className="text-sm font-medium">Common Names</p>
+                  <p className="text-muted-foreground">
+                    English: {newTree.common_name_english}
+                    {newTree.common_name_malayalam && (
+                      <><br />Malayalam: {newTree.common_name_malayalam}</>
+                    )}
+                  </p>
+                </div>
+                
+                {newTree.native_range && (
+                  <div>
+                    <p className="text-sm font-medium">Native Range</p>
+                    <p className="text-muted-foreground">{newTree.native_range}</p>
+                  </div>
+                )}
                 
                 <div>
                   <p className="text-sm font-medium">Location</p>
@@ -204,6 +246,74 @@ const AddTree = () => {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="scientific_name">Scientific Name</Label>
+              <input
+                id="scientific_name"
+                name="scientific_name"
+                type="text"
+                className="input-field mt-1.5"
+                placeholder="e.g., Quercus robur"
+                value={formData.scientific_name}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="family">Family</Label>
+              <input
+                id="family"
+                name="family"
+                type="text"
+                className="input-field mt-1.5"
+                placeholder="e.g., Fagaceae"
+                value={formData.family}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="common_name_english">Common Name (English)</Label>
+              <input
+                id="common_name_english"
+                name="common_name_english"
+                type="text"
+                className="input-field mt-1.5"
+                placeholder="e.g., English Oak"
+                value={formData.common_name_english}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="common_name_malayalam">Common Name (Malayalam)</Label>
+              <input
+                id="common_name_malayalam"
+                name="common_name_malayalam"
+                type="text"
+                className="input-field mt-1.5"
+                placeholder="e.g., ഓക്ക്"
+                value={formData.common_name_malayalam}
+                onChange={handleInputChange}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="native_range">Native Range</Label>
+              <input
+                id="native_range"
+                name="native_range"
+                type="text"
+                className="input-field mt-1.5"
+                placeholder="e.g., Europe, Western Asia"
+                value={formData.native_range}
+                onChange={handleInputChange}
               />
             </div>
             

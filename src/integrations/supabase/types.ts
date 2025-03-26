@@ -9,7 +9,51 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      trees: {
+        Row: {
+          added_date: string
+          common_name_english: string
+          common_name_malayalam: string | null
+          description: string | null
+          family: string
+          id: string
+          image_url: string | null
+          location: string
+          name: string
+          native_range: string | null
+          scientific_name: string
+          species: string
+        }
+        Insert: {
+          added_date?: string
+          common_name_english: string
+          common_name_malayalam?: string | null
+          description?: string | null
+          family: string
+          id?: string
+          image_url?: string | null
+          location: string
+          name: string
+          native_range?: string | null
+          scientific_name: string
+          species: string
+        }
+        Update: {
+          added_date?: string
+          common_name_english?: string
+          common_name_malayalam?: string | null
+          description?: string | null
+          family?: string
+          id?: string
+          image_url?: string | null
+          location?: string
+          name?: string
+          native_range?: string | null
+          scientific_name?: string
+          species?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

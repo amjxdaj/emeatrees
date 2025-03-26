@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useTreeDetails } from '@/hooks/useTreeData';
 import Layout from '@/components/Layout';
 import QRCodeGenerator from '@/components/QRCodeGenerator';
-import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Globe, Flower } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -39,8 +39,8 @@ const TreeDetails = () => {
                 <h1 className="text-3xl font-display font-bold tracking-tight">
                   {tree.name}
                 </h1>
-                <p className="text-xl text-muted-foreground">
-                  {tree.species}
+                <p className="text-xl italic text-muted-foreground">
+                  {tree.scientific_name}
                 </p>
               </div>
               <Link to="/add-tree">
@@ -99,19 +99,50 @@ const TreeDetails = () => {
               </div>
               
               <div className="flex items-center bg-secondary/70 backdrop-blur-sm px-3 py-2 rounded-lg text-sm">
+                <Flower className="h-4 w-4 mr-2 text-nature-600" />
+                {tree.family}
+              </div>
+              
+              {tree.native_range && (
+                <div className="flex items-center bg-secondary/70 backdrop-blur-sm px-3 py-2 rounded-lg text-sm">
+                  <Globe className="h-4 w-4 mr-2 text-nature-600" />
+                  {tree.native_range}
+                </div>
+              )}
+              
+              <div className="flex items-center bg-secondary/70 backdrop-blur-sm px-3 py-2 rounded-lg text-sm">
                 <Calendar className="h-4 w-4 mr-2 text-nature-600" />
                 Added: {new Date(tree.addedDate).toLocaleDateString()}
               </div>
             </div>
             
-            <div className="animate-fade-in delay-200">
-              <h2 className="text-xl font-display font-semibold mb-3">
-                About this tree
-              </h2>
-              <Separator className="mb-4" />
-              <p className="text-muted-foreground whitespace-pre-line">
-                {tree.description}
-              </p>
+            <div className="animate-fade-in delay-200 space-y-6">
+              <div>
+                <h2 className="text-xl font-display font-semibold mb-3">
+                  Common Names
+                </h2>
+                <Separator className="mb-4" />
+                <div className="space-y-2">
+                  <div>
+                    <span className="font-medium">English:</span> {tree.common_name_english}
+                  </div>
+                  {tree.common_name_malayalam && (
+                    <div>
+                      <span className="font-medium">Malayalam:</span> {tree.common_name_malayalam}
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div>
+                <h2 className="text-xl font-display font-semibold mb-3">
+                  About this tree
+                </h2>
+                <Separator className="mb-4" />
+                <p className="text-muted-foreground whitespace-pre-line">
+                  {tree.description}
+                </p>
+              </div>
             </div>
           </div>
           

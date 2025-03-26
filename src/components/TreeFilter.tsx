@@ -12,6 +12,7 @@ import { FilterOptions } from '@/types';
 interface TreeFilterProps {
   species: string[];
   locations: string[];
+  families?: string[];
   filters: FilterOptions;
   onFilterChange: (filters: Partial<FilterOptions>) => void;
   onClearFilters: () => void;
@@ -20,6 +21,7 @@ interface TreeFilterProps {
 const TreeFilter = ({
   species,
   locations,
+  families = [],
   filters,
   onFilterChange,
   onClearFilters
@@ -33,8 +35,16 @@ const TreeFilter = ({
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onFilterChange({ location: e.target.value });
   };
+
+  const handleFamilyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onFilterChange({ family: e.target.value });
+  };
   
-  const hasActiveFilters = !!filters.species || !!filters.location;
+  const hasActiveFilters = !!filters.species || !!filters.location || !!filters.family;
+  const activeFilterCount = 
+    (!!filters.species ? 1 : 0) + 
+    (!!filters.location ? 1 : 0) + 
+    (!!filters.family ? 1 : 0);
   
   return (
     <div className="relative">
@@ -49,7 +59,7 @@ const TreeFilter = ({
             <span>Filter</span>
             {hasActiveFilters && (
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
-                {(!!filters.species ? 1 : 0) + (!!filters.location ? 1 : 0)}
+                {activeFilterCount}
               </span>
             )}
           </Button>
@@ -89,6 +99,24 @@ const TreeFilter = ({
                 ))}
               </select>
             </div>
+            
+            {families.length > 0 && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  Family
+                </label>
+                <select
+                  className="input-field"
+                  value={filters.family || ''}
+                  onChange={handleFamilyChange}
+                >
+                  <option value="">All Families</option>
+                  {families.map(item => (
+                    <option key={item} value={item}>{item}</option>
+                  ))}
+                </select>
+              </div>
+            )}
             
             <div className="space-y-2">
               <label className="text-sm font-medium">

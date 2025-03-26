@@ -16,7 +16,8 @@ const Index = () => {
     updateFilters, 
     clearFilters,
     uniqueSpecies,
-    uniqueLocations
+    uniqueLocations,
+    uniqueFamilies
   } = useTreeData();
 
   const [animatedTrees, setAnimatedTrees] = useState<string[]>([]);
@@ -56,6 +57,7 @@ const Index = () => {
           <TreeFilter
             species={uniqueSpecies}
             locations={uniqueLocations}
+            families={uniqueFamilies}
             filters={filters}
             onFilterChange={updateFilters}
             onClearFilters={clearFilters}

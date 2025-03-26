@@ -30,10 +30,14 @@ const TreeCard = ({ tree }: TreeCardProps) => {
             {tree.name}
           </h3>
         </div>
-        <div className="flex items-center text-sm text-muted-foreground mb-3">
-          <span>{tree.location}</span>
-          <span className="mx-2">•</span>
-          <span>{new Date(tree.addedDate).toLocaleDateString()}</span>
+        <div className="flex flex-col space-y-1 mb-3">
+          <span className="text-sm italic">{tree.scientific_name}</span>
+          <span className="text-sm text-muted-foreground">Family: {tree.family}</span>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <span>{tree.location}</span>
+            <span className="mx-2">•</span>
+            <span>{new Date(tree.addedDate).toLocaleDateString()}</span>
+          </div>
         </div>
         <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
           {tree.description}

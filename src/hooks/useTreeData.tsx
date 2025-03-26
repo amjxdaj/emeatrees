@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getTrees, getTree } from '../services/api';
 import { Tree, FilterOptions } from '../types';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 
 export const useTreeData = (initialFilters?: FilterOptions) => {
   const [trees, setTrees] = useState<Tree[]>([]);
@@ -33,16 +33,22 @@ export const useTreeData = (initialFilters?: FilterOptions) => {
     return trees.filter(tree => {
       const matchesSearch = !filters.searchQuery || 
         tree.name.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
+        tree.scientific_name.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
         tree.species.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        tree.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
+        tree.description.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
+        (tree.common_name_english && tree.common_name_english.toLowerCase().includes(filters.searchQuery.toLowerCase())) ||
+        (tree.common_name_malayalam && tree.common_name_malayalam.toLowerCase().includes(filters.searchQuery.toLowerCase()));
       
       const matchesSpecies = !filters.species || 
         tree.species.toLowerCase() === filters.species.toLowerCase();
       
       const matchesLocation = !filters.location || 
         tree.location.toLowerCase() === filters.location.toLowerCase();
+        
+      const matchesFamily = !filters.family || 
+        tree.family.toLowerCase() === filters.family.toLowerCase();
       
-      return matchesSearch && matchesSpecies && matchesLocation;
+      return matchesSearch && matchesSpecies && matchesLocation && matchesFamily;
     });
   }, [trees, filters]);
 
@@ -52,6 +58,10 @@ export const useTreeData = (initialFilters?: FilterOptions) => {
 
   const uniqueLocations = useMemo(() => {
     return Array.from(new Set(trees.map(tree => tree.location))).sort();
+  }, [trees]);
+  
+  const uniqueFamilies = useMemo(() => {
+    return Array.from(new Set(trees.map(tree => tree.family))).sort();
   }, [trees]);
 
   const updateFilters = (newFilters: Partial<FilterOptions>) => {
@@ -72,6 +82,7 @@ export const useTreeData = (initialFilters?: FilterOptions) => {
     clearFilters,
     uniqueSpecies,
     uniqueLocations,
+    uniqueFamilies,
   };
 };
 
