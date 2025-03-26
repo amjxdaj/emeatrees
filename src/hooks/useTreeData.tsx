@@ -1,0 +1,105 @@
+
+import { useState, useEffect, useMemo } from 'react';
+import { getTrees, getTree } from '../services/api';
+import { Tree, FilterOptions } from '../types';
+import { toast } from '@/components/ui/sonner';
+
+export const useTreeData = (initialFilters?: FilterOptions) => {
+  const [trees, setTrees] = useState<Tree[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<FilterOptions>(initialFilters || {});
+
+  useEffect(() => {
+    const fetchTrees = async () => {
+      setLoading(true);
+      const response = await getTrees();
+      
+      if (response.success && response.data) {
+        setTrees(response.data);
+        setError(null);
+      } else {
+        setError(response.error || 'Failed to fetch trees');
+        toast.error('Failed to load trees. Please try again later.');
+      }
+      
+      setLoading(false);
+    };
+
+    fetchTrees();
+  }, []);
+
+  const filteredTrees = useMemo(() => {
+    return trees.filter(tree => {
+      const matchesSearch = !filters.searchQuery || 
+        tree.name.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
+        tree.species.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
+        tree.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
+      
+      const matchesSpecies = !filters.species || 
+        tree.species.toLowerCase() === filters.species.toLowerCase();
+      
+      const matchesLocation = !filters.location || 
+        tree.location.toLowerCase() === filters.location.toLowerCase();
+      
+      return matchesSearch && matchesSpecies && matchesLocation;
+    });
+  }, [trees, filters]);
+
+  const uniqueSpecies = useMemo(() => {
+    return Array.from(new Set(trees.map(tree => tree.species))).sort();
+  }, [trees]);
+
+  const uniqueLocations = useMemo(() => {
+    return Array.from(new Set(trees.map(tree => tree.location))).sort();
+  }, [trees]);
+
+  const updateFilters = (newFilters: Partial<FilterOptions>) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
+  };
+
+  const clearFilters = () => {
+    setFilters({});
+  };
+
+  return {
+    trees: filteredTrees,
+    allTrees: trees,
+    loading,
+    error,
+    filters,
+    updateFilters,
+    clearFilters,
+    uniqueSpecies,
+    uniqueLocations,
+  };
+};
+
+export const useTreeDetails = (id: string) => {
+  const [tree, setTree] = useState<Tree | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTree = async () => {
+      if (!id) return;
+      
+      setLoading(true);
+      const response = await getTree(id);
+      
+      if (response.success && response.data) {
+        setTree(response.data);
+        setError(null);
+      } else {
+        setError(response.error || 'Failed to fetch tree details');
+        toast.error('Could not load tree details. Please try again later.');
+      }
+      
+      setLoading(false);
+    };
+
+    fetchTree();
+  }, [id]);
+
+  return { tree, loading, error };
+};
