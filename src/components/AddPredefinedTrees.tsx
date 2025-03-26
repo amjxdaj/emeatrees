@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { addPredefinedTrees } from '@/services/api';
 import { toast } from 'sonner';
-import { TreeIcon, Check } from 'lucide-react';
+import { Trees, Check } from 'lucide-react';
 
 interface AddPredefinedTreesProps {
   onSuccess?: () => void;
@@ -38,7 +38,7 @@ const AddPredefinedTrees = ({ onSuccess }: AddPredefinedTreesProps) => {
     <div className="border border-border rounded-lg p-4 mb-6 bg-background">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
-          <TreeIcon className="h-5 w-5 mr-2 text-nature-600" />
+          <Trees className="h-5 w-5 mr-2 text-nature-600" />
           <h3 className="font-medium">Add Predefined Trees</h3>
         </div>
         {success && (

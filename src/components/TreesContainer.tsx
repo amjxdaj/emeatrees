@@ -35,7 +35,10 @@ const TreesContainer = () => {
         <AddPredefinedTrees onSuccess={refreshTrees} />
       </div>
 
-      <SearchBar onSearch={handleSearch} initialQuery={filters.searchQuery} />
+      <SearchBar 
+        onSearch={handleSearch} 
+        initialValue={filters.searchQuery} 
+      />
       
       <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-6">
         <aside className="space-y-6">
@@ -43,11 +46,9 @@ const TreesContainer = () => {
             species={uniqueSpecies}
             locations={uniqueLocations}
             families={uniqueFamilies}
-            selectedSpecies={filters.species}
-            selectedLocation={filters.location}
-            selectedFamily={filters.family}
-            onChange={handleFilterChange}
-            onClear={clearFilters}
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onClearFilters={clearFilters}
           />
         </aside>
         

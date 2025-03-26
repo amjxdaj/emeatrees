@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { ApiResponse, Tree, TreeFormData, TreeImageUploadData } from '../types';
 import { supabase } from '@/integrations/supabase/client';
@@ -183,8 +182,674 @@ const PREDEFINED_TREES: Partial<Tree>[] = [
     species: 'BAMBUSA VENTRICOSA',
     location: 'EMEA College',
     description: 'A bamboo species known for its swollen, bulbous internodes that resemble a Buddha belly.'
+  },
+  {
+    name: 'Spiny Bamboo',
+    scientific_name: 'BAMBUSA BAMBOS',
+    family: 'POACEAE',
+    common_name_english: 'Spiny Bamboo',
+    common_name_malayalam: 'മുള',
+    native_range: 'Indo-China',
+    species: 'BAMBUSA BAMBOS',
+    location: 'EMEA College',
+    description: 'A thorny bamboo species with robust culms used for various purposes.'
+  },
+  {
+    name: 'Paradise Tree',
+    scientific_name: 'SIMAROUBA GLAUCA',
+    family: 'SIMAROUBACEAE',
+    common_name_english: 'Paradise Tree',
+    common_name_malayalam: 'ലക്ഷ്മിതരു',
+    native_range: 'Mexico to Tropical America',
+    species: 'SIMAROUBA GLAUCA',
+    location: 'EMEA College',
+    description: 'An evergreen tree with numerous medicinal and industrial uses.'
+  },
+  {
+    name: 'Iron Wood of Malabar',
+    scientific_name: 'HOPEA PARVIFLORA',
+    family: 'DIPTEROCARPACEAE',
+    common_name_english: 'Iron Wood of Malabar',
+    common_name_malayalam: 'ഉരിപ്പ്, കമ്പകം',
+    native_range: 'Southwestern Ghats',
+    species: 'HOPEA PARVIFLORA',
+    location: 'EMEA College',
+    description: 'A valuable timber tree known for its hard, durable wood.'
+  },
+  {
+    name: 'Sita Ashok',
+    scientific_name: 'SARACA ASOCA',
+    family: 'FABACEAE',
+    common_name_english: 'Sita Ashok',
+    common_name_malayalam: 'അശോകം',
+    native_range: 'Eastern Pakistan to Myanmar & Sri Lanka',
+    species: 'SARACA ASOCA',
+    location: 'EMEA College',
+    description: 'A sacred tree in Hindu mythology, with medicinal properties.'
+  },
+  {
+    name: 'Henna Plant',
+    scientific_name: 'LAWSONIA INERMIS',
+    family: 'LYTHRACEAE',
+    common_name_english: 'Henna Plant',
+    common_name_malayalam: 'മയിലാഞ്ചി',
+    species: 'LAWSONIA INERMIS',
+    location: 'EMEA College',
+    description: 'A flowering plant used for producing the natural dye henna.'
+  },
+  {
+    name: 'Beach Almond',
+    scientific_name: 'TERMINALIA BELLIRICA',
+    family: 'COMBRETACEAE',
+    common_name_english: 'Beach Almond',
+    common_name_malayalam: 'താന്നി',
+    native_range: 'India, China & Malaysia',
+    species: 'TERMINALIA BELLIRICA',
+    location: 'EMEA College',
+    description: 'A deciduous tree with medicinal fruits and valuable timber.'
+  },
+  {
+    name: 'White Teak',
+    scientific_name: 'GMELINA ARBOREA',
+    family: 'VERBENACEAE',
+    common_name_english: 'White Teak',
+    common_name_malayalam: 'കുമിഴ്',
+    native_range: 'Indian subcontinent',
+    species: 'GMELINA ARBOREA',
+    location: 'EMEA College',
+    description: 'A fast-growing deciduous tree used for timber and medicinal purposes.'
+  },
+  {
+    name: 'Cluster Fig',
+    scientific_name: 'FICUS RACEMOSA',
+    family: 'MORACEAE',
+    common_name_english: 'Cluster Fig',
+    common_name_malayalam: 'അത്തി',
+    native_range: 'Pakistan, India, Northern Queensland',
+    species: 'FICUS RACEMOSA',
+    location: 'EMEA College',
+    description: 'A fig tree bearing fruit directly on the trunk and branches.'
+  },
+  {
+    name: 'Indian Gooseberry',
+    scientific_name: 'PHYLLANTHUS EMBLICA',
+    family: 'EUPHORBIACEAE',
+    common_name_english: 'Indian Gooseberry',
+    common_name_malayalam: 'നെല്ലി',
+    native_range: 'Tropical Asia',
+    species: 'PHYLLANTHUS EMBLICA',
+    location: 'EMEA College',
+    description: 'A deciduous tree with edible fruits high in vitamin C.'
+  },
+  {
+    name: 'Ivory Tree',
+    scientific_name: 'HOLARRHENA PUBESCENS',
+    family: 'APOCYNACEAE',
+    common_name_english: 'Ivory Tree',
+    common_name_malayalam: 'കുടകപ്പാല',
+    species: 'HOLARRHENA PUBESCENS',
+    location: 'EMEA College',
+    description: 'A medicinal plant with white flowers and bark used in traditional medicine.'
+  },
+  {
+    name: 'Holoptelia',
+    scientific_name: 'HOLOPTELIA INTEGRIFOLIA',
+    family: 'ULMACEAE',
+    common_name_malayalam: 'ഞെട്ടാവൽ',
+    native_range: 'Indo-Malaysia',
+    species: 'HOLOPTELIA INTEGRIFOLIA',
+    location: 'EMEA College',
+    description: 'A large deciduous tree with medicinal properties.'
+  },
+  {
+    name: 'Hill Mango',
+    scientific_name: 'COMMIPHORA CAUDATA',
+    family: 'BURSERACEAE',
+    common_name_english: 'Hill Mango',
+    species: 'COMMIPHORA CAUDATA',
+    location: 'EMEA College',
+    description: 'A tree that yields aromatic gum resin used in traditional medicine.'
+  },
+  {
+    name: 'Peepal Tree',
+    scientific_name: 'FICUS RELIGIOSA',
+    family: 'MORACEAE',
+    common_name_english: 'Peepal, Holy Fig Tree',
+    common_name_malayalam: 'അരയാൽ',
+    native_range: 'Southeast Pakistan to Myanmar',
+    species: 'FICUS RELIGIOSA',
+    location: 'EMEA College',
+    description: 'A sacred tree in several religions, known for its heart-shaped leaves.'
+  },
+  {
+    name: 'Sweet Indrajao',
+    scientific_name: 'WRIGHTIA TINCTORIA',
+    family: 'APOCYNACEAE',
+    common_name_english: 'Sweet Indrajao',
+    common_name_malayalam: 'ദന്തപ്പാല',
+    species: 'WRIGHTIA TINCTORIA',
+    location: 'EMEA College',
+    description: 'A medicinal tree with white flowers and seeds that yield indigo dye.'
+  },
+  {
+    name: 'Indian Bael',
+    scientific_name: 'AEGLE MARMELOS',
+    family: 'RUTACEAE',
+    common_name_english: 'Indian Bael, Wood Apple',
+    common_name_malayalam: 'കൂവളം',
+    native_range: 'India & Sri Lanka',
+    species: 'AEGLE MARMELOS',
+    location: 'EMEA College',
+    description: 'A sacred tree with medicinal fruits used in traditional medicine.'
+  },
+  {
+    name: 'Mango Tree',
+    scientific_name: 'MANGIFERA INDICA',
+    family: 'ANACARDIACEAE',
+    common_name_english: 'Mango tree',
+    common_name_malayalam: 'മാവ്',
+    native_range: 'Assam to China',
+    species: 'MANGIFERA INDICA',
+    location: 'EMEA College',
+    description: 'A fruit tree producing the popular mango fruit, native to South Asia.'
+  },
+  {
+    name: 'Sandal Tree',
+    scientific_name: 'SANTALUM ALBUM',
+    family: 'SANTALACEAE',
+    common_name_english: 'Sandal Tree',
+    common_name_malayalam: 'ചന്ദനം',
+    native_range: 'Java to Northern Australia',
+    species: 'SANTALUM ALBUM',
+    location: 'EMEA College',
+    description: 'A tree prized for its fragrant heartwood used in perfumes and religious ceremonies.'
+  },
+  {
+    name: 'Neem Tree',
+    scientific_name: 'AZADIRACHTA INDICA',
+    family: 'MELIACEAE',
+    common_name_english: 'Neem',
+    common_name_malayalam: 'വേപ്പ്',
+    native_range: 'Assam to Indo-China',
+    species: 'AZADIRACHTA INDICA',
+    location: 'EMEA College',
+    description: 'A drought-resistant tree with numerous medicinal properties.'
+  },
+  {
+    name: 'Bengal Bamboo',
+    scientific_name: 'BAMBUSA TULDA',
+    family: 'POACEAE',
+    common_name_english: 'Bengal Bamboo',
+    native_range: 'India',
+    species: 'BAMBUSA TULDA',
+    location: 'EMEA College',
+    description: 'A versatile bamboo species used for construction, furniture, and paper making.'
+  },
+  {
+    name: 'Running Bamboo',
+    scientific_name: 'PLEIOBLASTUS FORTUNEI',
+    family: 'POACEAE',
+    common_name_english: 'Running Bamboo',
+    native_range: 'Southern Japan',
+    species: 'PLEIOBLASTUS FORTUNEI',
+    location: 'EMEA College',
+    description: 'A dwarf bamboo species with variegated leaves, spreading through underground runners.'
+  },
+  {
+    name: 'Yellow Bamboo',
+    scientific_name: 'BAMBUSA STRIATA',
+    family: 'POACEAE',
+    common_name_english: 'Yellow Bamboo',
+    common_name_malayalam: 'മഞ്ഞമുള',
+    species: 'BAMBUSA STRIATA',
+    location: 'EMEA College',
+    description: 'An ornamental bamboo with golden yellow culms striped with green.'
+  },
+  {
+    name: 'Forest Red Gum',
+    scientific_name: 'EUCALYPTUS TERETICORNIS',
+    family: 'MYRTACEAE',
+    common_name_english: 'Forest Red Gum',
+    common_name_malayalam: 'യൂക്കാലി',
+    native_range: 'Australia',
+    species: 'EUCALYPTUS TERETICORNIS',
+    location: 'EMEA College',
+    description: 'A tall eucalyptus tree with medicinal leaves and valuable timber.'
+  },
+  {
+    name: 'Mahogany (Large-leaf)',
+    scientific_name: 'SWIETENIA MACROPHYLLA',
+    family: 'MELIACEAE',
+    common_name_english: 'Mahogany',
+    common_name_malayalam: 'മഹാഗണി',
+    native_range: 'Mexico to Bolivia & Brazil',
+    species: 'SWIETENIA MACROPHYLLA',
+    location: 'EMEA College',
+    description: 'A large tropical tree valued for its beautiful reddish-brown timber.'
+  },
+  {
+    name: 'Star Gooseberry',
+    scientific_name: 'PHYLLANTHUS ACIDUS',
+    family: 'EUPHORBIACEAE',
+    common_name_english: 'Star Gooseberry',
+    common_name_malayalam: 'അരിനെല്ലി',
+    native_range: 'Brazil',
+    species: 'PHYLLANTHUS ACIDUS',
+    location: 'EMEA College',
+    description: 'A fruit tree with sour, crisp berries that grow directly on the branches.'
+  },
+  {
+    name: 'Sky Flower',
+    scientific_name: 'DURANTA ERECTA',
+    family: 'VERBENACEAE',
+    common_name_english: 'Sky Flower',
+    common_name_malayalam: 'ചെമ്പഴുക്കാച്ചെടി',
+    native_range: 'Tropical America',
+    species: 'DURANTA ERECTA',
+    location: 'EMEA College',
+    description: 'An ornamental shrub with blue or white flowers and yellow-orange berries.'
+  },
+  {
+    name: 'Dividivi Plant',
+    scientific_name: 'LIBIDIBIA CORIARIA',
+    family: 'FABACEAE',
+    common_name_english: 'Dividivi Plant',
+    common_name_malayalam: 'ഡിവിഡിവി',
+    native_range: 'Mexico to Venezuela',
+    species: 'LIBIDIBIA CORIARIA',
+    location: 'EMEA College',
+    description: 'A tree with twisted seed pods rich in tannins, used for leather tanning.'
+  },
+  {
+    name: 'Madagascar Almond',
+    scientific_name: 'TERMINALIA MANTALY',
+    family: 'COMBRETACEAE',
+    common_name_english: 'Madagascar Almond',
+    native_range: 'Madagascar',
+    species: 'TERMINALIA MANTALY',
+    location: 'EMEA College',
+    description: 'An ornamental tree with horizontal branches arranged in tiers.'
+  },
+  {
+    name: 'Fox Tail Palm',
+    scientific_name: 'WOODYETIA BIFURCATA',
+    family: 'ARECACEAE',
+    common_name_english: 'Fox Tail Palm',
+    native_range: 'Queensland, Australia',
+    species: 'WOODYETIA BIFURCATA',
+    location: 'EMEA College',
+    description: 'A palm tree with feathery fronds resembling a fox\'s tail.'
+  },
+  {
+    name: 'Rain Tree',
+    scientific_name: 'SAMANEA SAMAN',
+    family: 'FABACEAE',
+    common_name_english: 'Rain Tree',
+    common_name_malayalam: 'മഴമരം',
+    native_range: 'Central America to Venezuela & Ecuador',
+    species: 'SAMANEA SAMAN',
+    location: 'EMEA College',
+    description: 'A large, wide-canopied tree with pink flower heads and edible pods.'
+  },
+  {
+    name: 'Indian Beech Tree',
+    scientific_name: 'PONGAMIA PINNATA',
+    family: 'FABACEAE',
+    common_name_english: 'Indian Beech Tree',
+    common_name_malayalam: 'ഉങ്ങ്',
+    native_range: 'Asia to Western Pacific',
+    species: 'PONGAMIA PINNATA',
+    location: 'EMEA College',
+    description: 'A fast-growing tree with seeds that yield oil used for biodiesel production.'
+  },
+  {
+    name: 'Yellow Palm',
+    scientific_name: 'DYPSIS LUTESCENS',
+    family: 'ARECACEAE',
+    common_name_english: 'Yellow Palm',
+    species: 'DYPSIS LUTESCENS',
+    location: 'EMEA College',
+    description: 'A popular ornamental palm with yellow-green stems and feathery fronds.'
+  },
+  {
+    name: 'Weeping Fig',
+    scientific_name: 'FICUS BENJAMINA',
+    family: 'MORACEAE',
+    common_name_english: 'Weeping Fig',
+    native_range: 'Tropical Asia & Northern Australia',
+    species: 'FICUS BENJAMINA',
+    location: 'EMEA College',
+    description: 'A popular ornamental tree or houseplant with drooping branches and glossy leaves.'
+  },
+  {
+    name: 'Indian Almond Tree',
+    scientific_name: 'TERMINALIA CATAPPA',
+    family: 'COMBRETACEAE',
+    common_name_english: 'Indian Almond Tree',
+    common_name_malayalam: 'ബദാം',
+    species: 'TERMINALIA CATAPPA',
+    location: 'EMEA College',
+    description: 'A large tropical tree with edible nuts and leaves that turn red before falling.'
+  },
+  {
+    name: 'Golden Rain Tree',
+    scientific_name: 'KOELREUTERIA BIPINNATA',
+    family: 'SAPINDACEAE',
+    common_name_english: 'Golden Rain Tree',
+    common_name_malayalam: 'കനകമഴമരം',
+    native_range: 'China',
+    species: 'KOELREUTERIA BIPINNATA',
+    location: 'EMEA College',
+    description: 'A deciduous tree with bright yellow flowers and papery seed capsules.'
+  },
+  {
+    name: 'Giant Indian Fig',
+    scientific_name: 'FICUS AURICULATA',
+    family: 'MORACEAE',
+    common_name_english: 'Giant Indian Fig',
+    common_name_malayalam: 'അത്തി',
+    native_range: 'Northeast Pakistan to South China & Malaysia',
+    species: 'FICUS AURICULATA',
+    location: 'EMEA College',
+    description: 'A fig tree known for its large, ear-shaped leaves and edible figs.'
+  },
+  {
+    name: 'Australian Brush Cherry',
+    scientific_name: 'EUGENIA MYRTIFOLIA',
+    family: 'MYRTACEAE',
+    common_name_english: 'Australian Brush Cherry',
+    native_range: 'Australia',
+    species: 'EUGENIA MYRTIFOLIA',
+    location: 'EMEA College',
+    description: 'An evergreen tree with glossy foliage and edible purplish-red berries.'
+  },
+  {
+    name: 'Banyan Tree',
+    scientific_name: 'FICUS BENGALENSIS',
+    family: 'MORACEAE',
+    common_name_english: 'Banyan Tree',
+    common_name_malayalam: 'പേരാൽ',
+    native_range: 'India & Pakistan',
+    species: 'FICUS BENGALENSIS',
+    location: 'EMEA College',
+    description: 'A massive fig tree that spreads by dropping aerial roots from its branches.'
+  },
+  {
+    name: 'Chikoo',
+    scientific_name: 'MANILKARA ZAPOTA',
+    family: 'SAPOTACEAE',
+    common_name_english: 'Chikoo',
+    common_name_malayalam: 'സപ്പോട്ട',
+    native_range: 'Mexico to Colombia',
+    species: 'MANILKARA ZAPOTA',
+    location: 'EMEA College',
+    description: 'A fruit tree producing sweet, brown sapota fruits; its sap is used for chewing gum.'
+  },
+  {
+    name: 'Lipstick Tree',
+    scientific_name: 'BIXA ORELLANA',
+    family: 'BIXACEAE',
+    common_name_english: 'Lipstick Tree',
+    native_range: 'Mexico to South Tropical America',
+    species: 'BIXA ORELLANA',
+    location: 'EMEA College',
+    description: 'A shrub whose seeds yield a red-orange dye used for food coloring and cosmetics.'
+  },
+  {
+    name: 'Plumeria',
+    scientific_name: 'PLUMERIA PUDICA',
+    family: 'APOCYNACEAE',
+    common_name_english: 'Plumeria',
+    native_range: 'Panama, Colombia & Venezuela',
+    species: 'PLUMERIA PUDICA',
+    location: 'EMEA College',
+    description: 'A flowering tree with white flowers and unique spoon-shaped leaves.'
+  },
+  {
+    name: 'Adenocalymma',
+    scientific_name: 'ADENOCALYMMA IMPERATORIS-MAXIMILIANII',
+    family: 'BIGNONIACEAE',
+    species: 'ADENOCALYMMA IMPERATORIS-MAXIMILIANII',
+    location: 'EMEA College',
+    description: 'A climbing vine with showy yellow flowers.'
+  },
+  {
+    name: 'Parakeet Flower',
+    scientific_name: 'HELICONIA PSITTACORUM',
+    family: 'HELICONIACEAE',
+    common_name_english: 'Parakeet Flower',
+    native_range: 'Caribbean',
+    species: 'HELICONIA PSITTACORUM',
+    location: 'EMEA College',
+    description: 'A tropical plant with colorful, bird-like flower bracts.'
+  },
+  {
+    name: 'Variegated Screwpine',
+    scientific_name: 'PANDANUS TECTORIUS "Variegata"',
+    family: 'PANDANACEAE',
+    common_name_english: 'Screwpine',
+    species: 'PANDANUS TECTORIUS',
+    location: 'EMEA College',
+    description: 'A palm-like tree with long, sword-shaped leaves arranged in a spiral pattern.'
+  },
+  {
+    name: 'Hakkinan Banana',
+    scientific_name: 'MUSA HAEKKINENII',
+    family: 'MUSACEAE',
+    common_name_malayalam: 'ഹക്കിനാൻ വാഴ',
+    native_range: 'Vietnam',
+    species: 'MUSA HAEKKINENII',
+    location: 'EMEA College',
+    description: 'A species of wild banana native to Vietnam.'
+  },
+  {
+    name: 'Golden Philodendron',
+    scientific_name: 'PHILODENDRON GOLDEN MELINONII',
+    family: 'ARACEAE',
+    species: 'PHILODENDRON GOLDEN MELINONII',
+    location: 'EMEA College',
+    description: 'A climbing philodendron with large, glossy leaves with golden variegation.'
+  },
+  {
+    name: 'Chinese Croton',
+    scientific_name: 'EXCOECARIA BICOLOR "Variegata"',
+    family: 'EUPHORBIACEAE',
+    common_name_english: 'Chinese Croton',
+    species: 'EXCOECARIA BICOLOR',
+    location: 'EMEA College',
+    description: 'An ornamental shrub with variegated leaves, red on the underside.'
+  },
+  {
+    name: 'White Champak',
+    scientific_name: 'MICHELIA ALBA',
+    family: 'MAGNOLIACEAE',
+    common_name_english: 'White Champak',
+    common_name_malayalam: 'വെള്ളച്ചെമ്പകം',
+    native_range: 'Southeast Asia',
+    species: 'MICHELIA ALBA',
+    location: 'EMEA College',
+    description: 'A tropical tree with strongly fragrant white flowers used in perfumery.'
+  },
+  {
+    name: 'Mangosteen',
+    scientific_name: 'GARCINIA MANGOSTANA',
+    family: 'CLUSIACEAE',
+    common_name_english: 'Mangosteen',
+    common_name_malayalam: 'മാംഗോസ്റ്റിൻ',
+    native_range: 'Southeast Asia',
+    species: 'GARCINIA MANGOSTANA',
+    location: 'EMEA College',
+    description: 'A slow-growing tropical evergreen tree that produces sweet, purple fruits.'
+  },
+  {
+    name: 'Acacia',
+    scientific_name: 'ACACIA AURICULIFORMIS',
+    family: 'FABACEAE',
+    common_name_english: 'Acacia',
+    common_name_malayalam: 'അക്കേഷ്യ',
+    native_range: 'New Guinea & Northern Australia',
+    species: 'ACACIA AURICULIFORMIS',
+    location: 'EMEA College',
+    description: 'A fast-growing, nitrogen-fixing tree used for reforestation and fuel wood.'
+  },
+  {
+    name: 'Copper Pod Tree',
+    scientific_name: 'PELTOPHORUM PTEROCARPUM',
+    family: 'FABACEAE',
+    common_name_english: 'Copper Pod Tree',
+    common_name_malayalam: 'ചാരക്കൊന്ന',
+    native_range: 'Indo-China, Northern Australia',
+    species: 'PELTOPHORUM PTEROCARPUM',
+    location: 'EMEA College',
+    description: 'A deciduous tree with a spreading crown and bright yellow flowers.'
+  },
+  {
+    name: 'Maharukh',
+    scientific_name: 'AILANTHUS TRIPHYSA',
+    family: 'SIMAROUBACEAE',
+    common_name_english: 'Maharukh',
+    common_name_malayalam: 'മട്ടി',
+    species: 'AILANTHUS TRIPHYSA',
+    location: 'EMEA College',
+    description: 'A deciduous tree with fragrant flowers and medicinal bark.'
+  },
+  {
+    name: 'Paper Flower Climber',
+    scientific_name: 'GETONIA FLORIBUNDA',
+    family: 'COMBRETACEAE',
+    common_name_english: 'Paper Flower Climber',
+    common_name_malayalam: 'പുല്ലാനി',
+    native_range: 'India, China, Malaysia',
+    species: 'GETONIA FLORIBUNDA',
+    location: 'EMEA College',
+    description: 'A woody climber with papery, persistent sepals that aid in wind dispersal of seeds.'
+  },
+  {
+    name: 'Cemetery Tree',
+    scientific_name: 'MONOON LONGIFOLIUM',
+    family: 'ANNONACEAE',
+    common_name_english: 'Polyalthia, Cemetery Tree',
+    common_name_malayalam: 'അരണമരം',
+    native_range: 'Southern India & Sri Lanka',
+    species: 'MONOON LONGIFOLIUM',
+    location: 'EMEA College',
+    description: 'An evergreen tree often planted in cemeteries and as an ornamental.'
+  },
+  {
+    name: 'Indian Tulip Tree',
+    scientific_name: 'THESPESIA POPULNEA',
+    family: 'MALVACEAE',
+    common_name_english: 'Indian Tulip Tree',
+    common_name_malayalam: 'പൂവരശ്',
+    species: 'THESPESIA POPULNEA',
+    location: 'EMEA College',
+    description: 'A coastal tree with heart-shaped leaves and yellow flowers that turn purple.'
+  },
+  {
+    name: 'Pinto Peanut',
+    scientific_name: 'ARACHIS PINTOI',
+    family: 'FABACEAE',
+    common_name_english: 'Pinto Peanut',
+    native_range: 'Eastern Brazil',
+    species: 'ARACHIS PINTOI',
+    location: 'EMEA College',
+    description: 'A perennial ground cover with yellow flowers, used for erosion control.'
+  },
+  {
+    name: 'South Indian Plum',
+    scientific_name: 'SYZYGIUM CARYOPHYLLATUM',
+    family: 'MYRTACEAE',
+    common_name_english: 'South Indian Plum',
+    common_name_malayalam: 'ചെറുഞാറ',
+    native_range: 'India & Sri Lanka',
+    species: 'SYZYGIUM CARYOPHYLLATUM',
+    location: 'EMEA College',
+    description: 'A small tree with edible fruits that turn black when ripe.'
+  },
+  {
+    name: 'Kindal Tree',
+    scientific_name: 'TERMINALIA PANICULATA',
+    family: 'COMBRETACEAE',
+    common_name_english: 'Kindal Tree',
+    common_name_malayalam: 'മരുത്',
+    native_range: 'Southern India',
+    species: 'TERMINALIA PANICULATA',
+    location: 'EMEA College',
+    description: 'A deciduous tree with winged fruits and bark used for tanning.'
+  },
+  {
+    name: 'Red Ivy',
+    scientific_name: 'STROBILANTHES ALTERNATA',
+    family: 'ACANTHACEAE',
+    common_name_english: 'Red Ivy',
+    common_name_malayalam: 'മുറികൂട്ടി',
+    native_range: 'Eastern Malaysia',
+    species: 'STROBILANTHES ALTERNATA',
+    location: 'EMEA College',
+    description: 'A small shrub with red-tinged foliage and blue flowers.'
+  },
+  {
+    name: 'Honey Myrtle',
+    scientific_name: 'MELALEUCA LINARIIFOLIA',
+    family: 'MYRTACEAE',
+    common_name_english: 'Honey Myrtle',
+    native_range: 'Australia',
+    species: 'MELALEUCA LINARIIFOLIA',
+    location: 'EMEA College',
+    description: 'A paperbark tree with small, white, honey-scented flowers in dense spikes.'
+  },
+  {
+    name: 'Red Silk Cotton Tree',
+    scientific_name: 'BOMBAX CEIBA',
+    family: 'MALVACEAE',
+    common_name_english: 'Red Silk Cotton Tree',
+    common_name_malayalam: 'മുള്ളിലം',
+    native_range: 'Tropical Asia to Northern Australia',
+    species: 'BOMBAX CEIBA',
+    location: 'EMEA College',
+    description: 'A large deciduous tree with bright red flowers and a spiny trunk.'
+  },
+  {
+    name: 'Cashew Nut Tree',
+    scientific_name: 'ANACARDIUM OCCIDENTALE',
+    family: 'ANACARDIACEAE',
+    common_name_english: 'Cashew Nut Tree',
+    common_name_malayalam: 'കശുമാവ്',
+    native_range: 'South America',
+    species: 'ANACARDIUM OCCIDENTALE',
+    location: 'EMEA College',
+    description: 'A tropical tree that produces cashew nuts and cashew apples.'
+  },
+  {
+    name: 'Mauritius Hemp',
+    scientific_name: 'FURCRAEA FOETIDA',
+    family: 'AGAVACEAE',
+    common_name_english: 'Mauritius Hemp',
+    native_range: 'Northern South America & Caribbean',
+    species: 'FURCRAEA FOETIDA',
+    location: 'EMEA College',
+    description: 'A succulent plant with a rosette of long, sword-shaped leaves, used for fiber.'
+  },
+  {
+    name: 'Glorybower',
+    scientific_name: 'CLERODENDRUM SPLENDENS',
+    family: 'LAMIACEAE',
+    common_name_english: 'Glorybower',
+    native_range: 'Tropical West Africa',
+    species: 'CLERODENDRUM SPLENDENS',
+    location: 'EMEA College',
+    description: 'A climbing shrub with clusters of bright red flowers.'
+  },
+  {
+    name: 'Mouse Tail Plant',
+    scientific_name: 'PHYLLANTHUS MYRTIFOLIUS',
+    family: 'PHYLLANTHACEAE',
+    common_name_english: 'Mouse Tail Plant',
+    native_range: 'Sri Lanka',
+    species: 'PHYLLANTHUS MYRTIFOLIUS',
+    location: 'EMEA College',
+    description: 'An ornamental shrub with small leaves arranged along the branches like a mouse tail.'
   }
-  // Note: This is a subset of 10 trees; the rest can be added similarly
 ];
 
 // Create axios instance
@@ -196,6 +861,7 @@ const api = axios.create({
 });
 
 // API Functions
+
 export const getTrees = async (): Promise<ApiResponse<Tree[]>> => {
   try {
     // Get trees from Supabase
@@ -477,3 +1143,4 @@ export const addPredefinedTrees = async (): Promise<ApiResponse<Tree[]>> => {
 };
 
 export default api;
+
