@@ -1,19 +1,89 @@
 
 import { useParams, Link } from 'react-router-dom';
 import { useTreeDetails } from '@/hooks/useTreeData';
+import { uploadTreeImage } from '@/services/api';
 import Layout from '@/components/Layout';
 import QRCodeGenerator from '@/components/QRCodeGenerator';
-import { ArrowLeft, Calendar, MapPin, Globe, Flower } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Globe, Flower, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const TreeDetails = () => {
   const { id = '' } = useParams<{ id: string }>();
-  const { tree, loading, error } = useTreeDetails(id);
+  const { tree, loading, error, refreshTree } = useTreeDetails(id);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   
   // Get the absolute URL for this page
   const currentUrl = `${window.location.origin}/tree/${id}`;
+  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    
+    if (file) {
+      // Check if file is an image
+      if (!file.type.match('image.*')) {
+        toast.error('Please select an image file');
+        return;
+      }
+      
+      // Check file size (limit to 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size should be less than 5MB');
+        return;
+      }
+      
+      setImageFile(file);
+      
+      // Create image preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImageFile(null);
+      setImagePreview(null);
+    }
+  };
+  
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+  
+  const handleImageUpload = async () => {
+    if (!imageFile || !id) return;
+    
+    setUploading(true);
+    
+    try {
+      const response = await uploadTreeImage({
+        treeId: id,
+        image: imageFile
+      });
+      
+      if (response.success) {
+        toast.success('Image uploaded successfully');
+        refreshTree();
+        setImageFile(null);
+        setImagePreview(null);
+      } else {
+        toast.error(response.error || 'Failed to upload image');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('An unexpected error occurred');
+    } finally {
+      setUploading(false);
+    }
+  };
+  
+  const needsImageUpload = tree && (tree.pendingImage || tree.imageUrl.includes('placeholder') || tree.imageUrl.includes('unsplash'));
   
   return (
     <Layout hideAddButton>
@@ -85,12 +155,75 @@ const TreeDetails = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
             <div className="rounded-xl overflow-hidden border border-border/60 mb-6 shadow-sm animate-fade-in">
-              <img 
-                src={tree.imageUrl} 
-                alt={tree.name} 
-                className="w-full h-auto object-cover aspect-video"
-              />
+              {needsImageUpload && !imagePreview ? (
+                <div className="aspect-video bg-muted/50 flex flex-col items-center justify-center p-6">
+                  <Upload className="h-12 w-12 text-muted-foreground mb-4" />
+                  <p className="text-lg font-medium mb-2">No image has been uploaded yet</p>
+                  <p className="text-sm text-muted-foreground mb-4 text-center">
+                    Upload an image of this tree to help others identify it.
+                  </p>
+                  <Button 
+                    onClick={() => document.getElementById('tree-image-upload')?.click()}
+                    variant="outline"
+                    className="mb-2"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Select Image
+                  </Button>
+                  <input
+                    id="tree-image-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </div>
+              ) : (
+                <img 
+                  src={imagePreview || tree.imageUrl} 
+                  alt={tree.name} 
+                  className="w-full h-auto object-cover aspect-video"
+                />
+              )}
             </div>
+            
+            {imageFile && imagePreview && (
+              <div className="animate-fade-in mb-6">
+                <div className="flex items-center justify-between bg-muted/30 rounded-lg p-3 mb-3">
+                  <div className="flex items-center">
+                    <div className="bg-background rounded-md p-1 mr-3">
+                      <img 
+                        src={imagePreview} 
+                        alt="Preview" 
+                        className="h-12 w-12 object-cover rounded"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-medium">{imageFile.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {(imageFile.size / 1024).toFixed(0)} KB
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="destructive" 
+                      size="sm" 
+                      onClick={removeImage}
+                    >
+                      <X className="h-4 w-4 mr-1" /> Cancel
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      onClick={handleImageUpload}
+                      disabled={uploading}
+                    >
+                      {uploading ? 'Uploading...' : 'Upload Image'}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
             
             <div className="flex flex-wrap gap-4 mb-6 animate-fade-in delay-100">
               <div className="flex items-center bg-secondary/70 backdrop-blur-sm px-3 py-2 rounded-lg text-sm">
@@ -123,9 +256,11 @@ const TreeDetails = () => {
                 </h2>
                 <Separator className="mb-4" />
                 <div className="space-y-2">
-                  <div>
-                    <span className="font-medium">English:</span> {tree.common_name_english}
-                  </div>
+                  {tree.common_name_english && (
+                    <div>
+                      <span className="font-medium">English:</span> {tree.common_name_english}
+                    </div>
+                  )}
                   {tree.common_name_malayalam && (
                     <div>
                       <span className="font-medium">Malayalam:</span> {tree.common_name_malayalam}
@@ -140,7 +275,7 @@ const TreeDetails = () => {
                 </h2>
                 <Separator className="mb-4" />
                 <p className="text-muted-foreground whitespace-pre-line">
-                  {tree.description}
+                  {tree.description || "No description available for this tree."}
                 </p>
               </div>
             </div>

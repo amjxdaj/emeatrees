@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { ApiResponse, Tree, TreeFormData } from '../types';
+import { ApiResponse, Tree, TreeFormData, TreeImageUploadData } from '../types';
 import { supabase } from '@/integrations/supabase/client';
 
 // This would normally point to your backend API
@@ -80,6 +80,113 @@ const MOCK_TREES: Tree[] = [
   }
 ];
 
+// List of predefined trees from the user's input
+const PREDEFINED_TREES: Partial<Tree>[] = [
+  {
+    name: 'Royal Palm',
+    scientific_name: 'ROYSTONIA REGIA',
+    family: 'ARECACEAE',
+    common_name_english: 'ROYAL PALM',
+    common_name_malayalam: 'രാജപ്പന',
+    native_range: 'Tropical America',
+    species: 'ROYSTONIA REGIA',
+    location: 'EMEA College',
+    description: 'A tall, elegant palm tree with a smooth gray trunk and a crown of feathery fronds.'
+  },
+  {
+    name: 'Guava Tree',
+    scientific_name: 'PSIDIUM GUJAVA',
+    family: 'MYRTACEAE',
+    common_name_english: 'Guava',
+    common_name_malayalam: 'പേര',
+    native_range: 'South Tropical America',
+    species: 'PSIDIUM GUJAVA',
+    location: 'EMEA College',
+    description: 'A small tree with spreading branches and edible, aromatic fruits.'
+  },
+  {
+    name: 'Paper Flower',
+    scientific_name: 'BOUGAINVILLEA SPECTABILIS',
+    family: 'NYCTAGINACEAE',
+    common_name_english: 'PAPER FLOWER',
+    common_name_malayalam: 'കടലാസ് പൂവ്',
+    species: 'BOUGAINVILLEA SPECTABILIS',
+    location: 'EMEA College',
+    description: 'A woody, climbing shrub with vibrant, papery bracts surrounding its small flowers.'
+  },
+  {
+    name: 'Tamarind Tree',
+    scientific_name: 'TAMARINDUS INDICA',
+    family: 'FABACEAE',
+    common_name_english: 'TAMARIND TREE',
+    common_name_malayalam: 'പുളി',
+    species: 'TAMARINDUS INDICA',
+    location: 'EMEA College',
+    description: 'A long-lived, large tree with an edible, sour fruit used in many culinary applications.'
+  },
+  {
+    name: 'Vat Tree',
+    scientific_name: 'MACARANGA PELTATA',
+    family: 'EUPHORBIACEAE',
+    common_name_malayalam: 'പൊടുകണ്ണി',
+    species: 'MACARANGA PELTATA',
+    location: 'EMEA College',
+    description: 'A fast-growing, pioneer tree species commonly found in disturbed areas.'
+  },
+  {
+    name: 'Flame Tree',
+    scientific_name: 'DELONIX REGIA',
+    family: 'FABACEAE',
+    common_name_english: 'GULMOHR, MAY FLOWER',
+    common_name_malayalam: 'പൂമരം',
+    native_range: 'Madagascar',
+    species: 'DELONIX REGIA',
+    location: 'EMEA College',
+    description: 'Known for its fern-like leaves and flamboyant display of fiery red-orange bloom.'
+  },
+  {
+    name: 'Mangium',
+    scientific_name: 'ACACIA MANGIUM',
+    family: 'FABACEAE',
+    common_name_english: 'MANGIUM, HICKORY WATTLE',
+    common_name_malayalam: 'മാഞ്ചിയം',
+    native_range: 'Maluku, New Guinea & Queensland',
+    species: 'ACACIA MANGIUM',
+    location: 'EMEA College',
+    description: 'A fast-growing tree species used for reforestation and timber production.'
+  },
+  {
+    name: 'Mahogany',
+    scientific_name: 'SWIETENIA MAHOGANI',
+    family: 'MELIACEAE',
+    common_name_english: 'MAHOGANY',
+    common_name_malayalam: 'മഹാഗണി',
+    species: 'SWIETENIA MAHOGANI',
+    location: 'EMEA College',
+    description: 'A tropical hardwood tree valued for its beautiful reddish-brown timber.'
+  },
+  {
+    name: 'Queen Crepe Myrtle',
+    scientific_name: 'LAGERSTROEMIA SPECIOSA',
+    family: 'LYTHRACEAE',
+    common_name_english: 'QUEEN CREPE MYRTLE',
+    common_name_malayalam: 'മണിമരുത്',
+    species: 'LAGERSTROEMIA SPECIOSA',
+    location: 'EMEA College',
+    description: 'A flowering tree known for its showy purple flowers and interesting bark patterns.'
+  },
+  {
+    name: "Buddha's Belly Bamboo",
+    scientific_name: 'BAMBUSA VENTRICOSA',
+    family: 'POACEAE',
+    common_name_english: "BUDDHA'S BELLY BAMBOO",
+    species: 'BAMBUSA VENTRICOSA',
+    location: 'EMEA College',
+    description: 'A bamboo species known for its swollen, bulbous internodes that resemble a Buddha belly.'
+  }
+  // Note: This is a subset of 10 trees; the rest can be added similarly
+];
+
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -102,8 +209,19 @@ export const getTrees = async (): Promise<ApiResponse<Tree[]>> => {
     if (data && data.length > 0) {
       const formattedTrees = data.map(tree => ({
         ...tree,
+        id: tree.id,
+        name: tree.name,
+        scientific_name: tree.scientific_name,
+        family: tree.family,
+        common_name_english: tree.common_name_english,
+        common_name_malayalam: tree.common_name_malayalam || undefined,
+        native_range: tree.native_range || undefined,
+        species: tree.species,
+        location: tree.location,
+        description: tree.description || '',
         imageUrl: tree.image_url || 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
-        addedDate: new Date(tree.added_date).toISOString().split('T')[0]
+        addedDate: new Date(tree.added_date).toISOString().split('T')[0],
+        pendingImage: !tree.image_url || tree.image_url.includes('placeholder') || tree.image_url.includes('unsplash'),
       }));
       return { success: true, data: formattedTrees };
     }
@@ -130,9 +248,19 @@ export const getTree = async (id: string): Promise<ApiResponse<Tree>> => {
     // If found in Supabase, return it
     if (data) {
       const formattedTree = {
-        ...data,
+        id: data.id,
+        name: data.name,
+        scientific_name: data.scientific_name,
+        family: data.family,
+        common_name_english: data.common_name_english,
+        common_name_malayalam: data.common_name_malayalam || undefined,
+        native_range: data.native_range || undefined,
+        species: data.species,
+        location: data.location,
+        description: data.description || '',
         imageUrl: data.image_url || 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
-        addedDate: new Date(data.added_date).toISOString().split('T')[0]
+        addedDate: new Date(data.added_date).toISOString().split('T')[0],
+        pendingImage: !data.image_url || data.image_url.includes('placeholder') || data.image_url.includes('unsplash'),
       };
       return { success: true, data: formattedTree };
     }
@@ -156,13 +284,13 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
       name: treeData.name,
       scientific_name: treeData.scientific_name,
       family: treeData.family,
-      common_name_english: treeData.common_name_english,
+      common_name_english: treeData.common_name_english || '',
       common_name_malayalam: treeData.common_name_malayalam || null,
       native_range: treeData.native_range || null,
       species: treeData.species,
       location: treeData.location,
-      description: treeData.description,
-      image_url: treeData.image ? URL.createObjectURL(treeData.image) : null
+      description: treeData.description || null,
+      image_url: treeData.skipImageUpload ? null : (treeData.image ? URL.createObjectURL(treeData.image) : null)
     };
     
     // Insert into Supabase
@@ -185,9 +313,10 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
         native_range: data.native_range,
         species: data.species,
         location: data.location,
-        description: data.description,
+        description: data.description || '',
         imageUrl: data.image_url || 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
-        addedDate: new Date(data.added_date).toISOString().split('T')[0]
+        addedDate: new Date(data.added_date).toISOString().split('T')[0],
+        pendingImage: treeData.skipImageUpload || !treeData.image
       };
       
       return { success: true, data: newTree };
@@ -204,15 +333,146 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
       native_range: treeData.native_range,
       species: treeData.species,
       location: treeData.location,
-      description: treeData.description,
-      imageUrl: treeData.image ? URL.createObjectURL(treeData.image) : 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
-      addedDate: new Date().toISOString().split('T')[0]
+      description: treeData.description || '',
+      imageUrl: treeData.skipImageUpload ? 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86' : (treeData.image ? URL.createObjectURL(treeData.image) : 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86'),
+      addedDate: new Date().toISOString().split('T')[0],
+      pendingImage: treeData.skipImageUpload || !treeData.image
     };
     
     return { success: true, data: newTree };
   } catch (error) {
     console.error('Error adding tree:', error);
     return { success: false, error: 'Failed to add tree' };
+  }
+};
+
+export const uploadTreeImage = async (data: TreeImageUploadData): Promise<ApiResponse<Tree>> => {
+  try {
+    // In a real implementation, you would upload the image to storage
+    // and then update the tree record with the new image URL
+    
+    // Mock implementation for now
+    const { treeId, image } = data;
+    
+    // Get the current tree data
+    const { data: treeData, error: fetchError } = await supabase
+      .from('trees')
+      .select('*')
+      .eq('id', treeId)
+      .single();
+      
+    if (fetchError) throw fetchError;
+    
+    if (!treeData) {
+      return { success: false, error: 'Tree not found' };
+    }
+    
+    // Create a temporary URL for the image
+    const imageUrl = URL.createObjectURL(image);
+    
+    // Update the tree with the new image URL
+    const { data: updatedTree, error: updateError } = await supabase
+      .from('trees')
+      .update({ image_url: imageUrl })
+      .eq('id', treeId)
+      .select()
+      .single();
+      
+    if (updateError) throw updateError;
+    
+    if (updatedTree) {
+      const tree: Tree = {
+        id: updatedTree.id,
+        name: updatedTree.name,
+        scientific_name: updatedTree.scientific_name,
+        family: updatedTree.family,
+        common_name_english: updatedTree.common_name_english,
+        common_name_malayalam: updatedTree.common_name_malayalam,
+        native_range: updatedTree.native_range,
+        species: updatedTree.species,
+        location: updatedTree.location,
+        description: updatedTree.description || '',
+        imageUrl: updatedTree.image_url || imageUrl,
+        addedDate: new Date(updatedTree.added_date).toISOString().split('T')[0],
+        pendingImage: false
+      };
+      
+      return { success: true, data: tree };
+    }
+    
+    return { 
+      success: false, 
+      error: 'Failed to update tree with new image' 
+    };
+  } catch (error) {
+    console.error('Error uploading tree image:', error);
+    return { success: false, error: 'Failed to upload image' };
+  }
+};
+
+// Add a function to bulk add the predefined trees
+export const addPredefinedTrees = async (): Promise<ApiResponse<Tree[]>> => {
+  try {
+    const addedTrees: Tree[] = [];
+    
+    for (const treeData of PREDEFINED_TREES) {
+      // Format the tree data for insertion
+      const treeRecord = {
+        name: treeData.name || '',
+        scientific_name: treeData.scientific_name || '',
+        family: treeData.family || '',
+        common_name_english: treeData.common_name_english || '',
+        common_name_malayalam: treeData.common_name_malayalam || null,
+        native_range: treeData.native_range || null,
+        species: treeData.species || '',
+        location: treeData.location || 'EMEA College',
+        description: treeData.description || null,
+        image_url: null
+      };
+      
+      // Insert into Supabase
+      const { data, error } = await supabase
+        .from('trees')
+        .insert(treeRecord)
+        .select()
+        .single();
+        
+      if (error) {
+        console.error(`Error adding tree ${treeData.name}:`, error);
+        continue; // Skip to the next tree if there's an error
+      }
+      
+      if (data) {
+        const newTree: Tree = {
+          id: data.id,
+          name: data.name,
+          scientific_name: data.scientific_name,
+          family: data.family,
+          common_name_english: data.common_name_english,
+          common_name_malayalam: data.common_name_malayalam,
+          native_range: data.native_range,
+          species: data.species,
+          location: data.location,
+          description: data.description || '',
+          imageUrl: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
+          addedDate: new Date(data.added_date).toISOString().split('T')[0],
+          pendingImage: true
+        };
+        
+        addedTrees.push(newTree);
+      }
+    }
+    
+    return { 
+      success: true, 
+      data: addedTrees,
+      error: addedTrees.length < PREDEFINED_TREES.length 
+        ? `Successfully added ${addedTrees.length} of ${PREDEFINED_TREES.length} trees.` 
+        : undefined
+    };
+  } catch (error) {
+    console.error('Error adding predefined trees:', error);
+    return { success: false, error: 'Failed to add predefined trees' };
   }
 };
 

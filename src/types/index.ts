@@ -1,5 +1,4 @@
 
-
 export interface Tree {
   id: string;
   name: string;
@@ -13,6 +12,7 @@ export interface Tree {
   description: string;
   imageUrl: string;
   addedDate: string;
+  pendingImage?: boolean;
 }
 
 export interface TreeFormData {
@@ -26,6 +26,7 @@ export interface TreeFormData {
   location: string;
   description: string;
   image?: File | null;
+  skipImageUpload?: boolean;
 }
 
 export interface ApiResponse<T> {
@@ -41,3 +42,7 @@ export type FilterOptions = {
   searchQuery?: string;
 };
 
+export interface TreeImageUploadData {
+  treeId: string;
+  image: File;
+}

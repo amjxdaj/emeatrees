@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { getTrees, getTree } from '../services/api';
 import { Tree, FilterOptions } from '../types';
 import { toast } from 'sonner';
@@ -10,24 +10,24 @@ export const useTreeData = (initialFilters?: FilterOptions) => {
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterOptions>(initialFilters || {});
 
-  useEffect(() => {
-    const fetchTrees = async () => {
-      setLoading(true);
-      const response = await getTrees();
-      
-      if (response.success && response.data) {
-        setTrees(response.data);
-        setError(null);
-      } else {
-        setError(response.error || 'Failed to fetch trees');
-        toast.error('Failed to load trees. Please try again later.');
-      }
-      
-      setLoading(false);
-    };
-
-    fetchTrees();
+  const fetchTrees = useCallback(async () => {
+    setLoading(true);
+    const response = await getTrees();
+    
+    if (response.success && response.data) {
+      setTrees(response.data);
+      setError(null);
+    } else {
+      setError(response.error || 'Failed to fetch trees');
+      toast.error('Failed to load trees. Please try again later.');
+    }
+    
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    fetchTrees();
+  }, [fetchTrees]);
 
   const filteredTrees = useMemo(() => {
     return trees.filter(tree => {
@@ -72,6 +72,10 @@ export const useTreeData = (initialFilters?: FilterOptions) => {
     setFilters({});
   };
 
+  const refreshTrees = () => {
+    fetchTrees();
+  };
+
   return {
     trees: filteredTrees,
     allTrees: trees,
@@ -80,6 +84,7 @@ export const useTreeData = (initialFilters?: FilterOptions) => {
     filters,
     updateFilters,
     clearFilters,
+    refreshTrees,
     uniqueSpecies,
     uniqueLocations,
     uniqueFamilies,
@@ -91,26 +96,30 @@ export const useTreeDetails = (id: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchTree = async () => {
-      if (!id) return;
-      
-      setLoading(true);
-      const response = await getTree(id);
-      
-      if (response.success && response.data) {
-        setTree(response.data);
-        setError(null);
-      } else {
-        setError(response.error || 'Failed to fetch tree details');
-        toast.error('Could not load tree details. Please try again later.');
-      }
-      
-      setLoading(false);
-    };
-
-    fetchTree();
+  const fetchTree = useCallback(async () => {
+    if (!id) return;
+    
+    setLoading(true);
+    const response = await getTree(id);
+    
+    if (response.success && response.data) {
+      setTree(response.data);
+      setError(null);
+    } else {
+      setError(response.error || 'Failed to fetch tree details');
+      toast.error('Could not load tree details. Please try again later.');
+    }
+    
+    setLoading(false);
   }, [id]);
 
-  return { tree, loading, error };
+  useEffect(() => {
+    fetchTree();
+  }, [fetchTree]);
+
+  const refreshTree = () => {
+    fetchTree();
+  };
+
+  return { tree, loading, error, refreshTree };
 };

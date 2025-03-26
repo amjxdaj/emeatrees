@@ -8,7 +8,7 @@ import { TreeFormData, Tree } from '@/types';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Image } from 'lucide-react';
 
 const AddTree = () => {
   const navigate = useNavigate();
@@ -22,7 +22,8 @@ const AddTree = () => {
     species: '',
     location: '',
     description: '',
-    image: null
+    image: null,
+    skipImageUpload: false
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -51,7 +52,7 @@ const AddTree = () => {
         return;
       }
       
-      setFormData(prev => ({ ...prev, image: file }));
+      setFormData(prev => ({ ...prev, image: file, skipImageUpload: false }));
       
       // Create image preview
       const reader = new FileReader();
@@ -68,6 +69,18 @@ const AddTree = () => {
   const removeImage = () => {
     setFormData(prev => ({ ...prev, image: null }));
     setImagePreview(null);
+  };
+
+  const toggleSkipImage = () => {
+    setFormData(prev => ({ 
+      ...prev, 
+      skipImageUpload: !prev.skipImageUpload,
+      image: prev.skipImageUpload ? prev.image : null
+    }));
+    
+    if (!formData.skipImageUpload) {
+      setImagePreview(null);
+    }
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,11 +99,6 @@ const AddTree = () => {
     
     if (!formData.family.trim()) {
       toast.error('Please enter the family');
-      return;
-    }
-    
-    if (!formData.common_name_english.trim()) {
-      toast.error('Please enter the common English name');
       return;
     }
     
@@ -155,11 +163,20 @@ const AddTree = () => {
               </h2>
               
               <div className="rounded-lg overflow-hidden mb-4 border border-border/60">
-                <img 
-                  src={newTree.imageUrl} 
-                  alt={newTree.name} 
-                  className="w-full h-auto object-cover aspect-video"
-                />
+                {newTree.pendingImage ? (
+                  <div className="w-full aspect-video bg-muted/50 flex flex-col items-center justify-center p-4">
+                    <Image className="h-8 w-8 text-muted-foreground mb-2" />
+                    <p className="text-sm text-center text-muted-foreground">
+                      Image upload pending. You can upload an image later from the tree details page.
+                    </p>
+                  </div>
+                ) : (
+                  <img 
+                    src={newTree.imageUrl} 
+                    alt={newTree.name} 
+                    className="w-full h-auto object-cover aspect-video"
+                  />
+                )}
               </div>
               
               <div className="space-y-4">
@@ -176,7 +193,9 @@ const AddTree = () => {
                 <div>
                   <p className="text-sm font-medium">Common Names</p>
                   <p className="text-muted-foreground">
-                    English: {newTree.common_name_english}
+                    {newTree.common_name_english && (
+                      <>English: {newTree.common_name_english}</>
+                    )}
                     {newTree.common_name_malayalam && (
                       <><br />Malayalam: {newTree.common_name_malayalam}</>
                     )}
@@ -197,7 +216,9 @@ const AddTree = () => {
                 
                 <div>
                   <p className="text-sm font-medium">Description</p>
-                  <p className="text-muted-foreground whitespace-pre-line">{newTree.description}</p>
+                  <p className="text-muted-foreground whitespace-pre-line">
+                    {newTree.description || "No description available."}
+                  </p>
                 </div>
               </div>
             </div>
@@ -229,6 +250,12 @@ const AddTree = () => {
               <p>
                 When scanned, visitors will be taken directly to a page where they can learn more about {newTree.name}.
               </p>
+              {newTree.pendingImage && (
+                <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+                  <p className="text-sm font-medium mb-1">Image upload pending</p>
+                  <p>When you scan the QR code or visit the tree page, you'll be able to upload an image for this tree.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -242,7 +269,7 @@ const AddTree = () => {
                 name="name"
                 type="text"
                 className="input-field mt-1.5"
-                placeholder="e.g., Ancient Oak"
+                placeholder="e.g., Royal Palm"
                 value={formData.name}
                 onChange={handleInputChange}
                 required
@@ -256,7 +283,7 @@ const AddTree = () => {
                 name="scientific_name"
                 type="text"
                 className="input-field mt-1.5"
-                placeholder="e.g., Quercus robur"
+                placeholder="e.g., ROYSTONIA REGIA"
                 value={formData.scientific_name}
                 onChange={handleInputChange}
                 required
@@ -270,7 +297,7 @@ const AddTree = () => {
                 name="family"
                 type="text"
                 className="input-field mt-1.5"
-                placeholder="e.g., Fagaceae"
+                placeholder="e.g., ARECACEAE"
                 value={formData.family}
                 onChange={handleInputChange}
                 required
@@ -284,10 +311,9 @@ const AddTree = () => {
                 name="common_name_english"
                 type="text"
                 className="input-field mt-1.5"
-                placeholder="e.g., English Oak"
+                placeholder="e.g., ROYAL PALM"
                 value={formData.common_name_english}
                 onChange={handleInputChange}
-                required
               />
             </div>
             
@@ -298,7 +324,7 @@ const AddTree = () => {
                 name="common_name_malayalam"
                 type="text"
                 className="input-field mt-1.5"
-                placeholder="e.g., ഓക്ക്"
+                placeholder="e.g., രാജപ്പന"
                 value={formData.common_name_malayalam}
                 onChange={handleInputChange}
               />
@@ -311,7 +337,7 @@ const AddTree = () => {
                 name="native_range"
                 type="text"
                 className="input-field mt-1.5"
-                placeholder="e.g., Europe, Western Asia"
+                placeholder="e.g., Tropical America"
                 value={formData.native_range}
                 onChange={handleInputChange}
               />
@@ -324,7 +350,7 @@ const AddTree = () => {
                 name="species"
                 type="text"
                 className="input-field mt-1.5"
-                placeholder="e.g., Quercus robur"
+                placeholder="e.g., ROYSTONIA REGIA"
                 value={formData.species}
                 onChange={handleInputChange}
                 required
@@ -354,7 +380,6 @@ const AddTree = () => {
                 placeholder="Describe the tree, its characteristics, history, etc."
                 value={formData.description}
                 onChange={handleInputChange}
-                required
               />
             </div>
           </div>
@@ -363,41 +388,66 @@ const AddTree = () => {
             <div>
               <Label>Tree Image</Label>
               <div className="mt-1.5">
-                {imagePreview ? (
-                  <div className="relative rounded-xl overflow-hidden border border-border">
-                    <img 
-                      src={imagePreview} 
-                      alt="Tree preview" 
-                      className="w-full h-auto aspect-video object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={removeImage}
-                      className="absolute top-2 right-2 bg-black/50 text-white p-1.5 rounded-full hover:bg-black/70 transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
-                    <Upload className="h-10 w-10 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm font-medium mb-1">Upload tree image</p>
-                    <p className="text-xs text-muted-foreground mb-4">PNG, JPG or JPEG (max. 5MB)</p>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => document.getElementById('image-upload')?.click()}
-                    >
-                      Select Image
-                    </Button>
-                    <input
-                      id="image-upload"
-                      name="image"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageChange}
-                    />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full mb-2"
+                  onClick={toggleSkipImage}
+                >
+                  {formData.skipImageUpload 
+                    ? "I want to upload an image now" 
+                    : "I'll upload the image later"}
+                </Button>
+                
+                {!formData.skipImageUpload && (
+                  imagePreview ? (
+                    <div className="relative rounded-xl overflow-hidden border border-border">
+                      <img 
+                        src={imagePreview} 
+                        alt="Tree preview" 
+                        className="w-full h-auto aspect-video object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={removeImage}
+                        className="absolute top-2 right-2 bg-black/50 text-white p-1.5 rounded-full hover:bg-black/70 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
+                      <Upload className="h-10 w-10 mx-auto mb-2 text-muted-foreground" />
+                      <p className="text-sm font-medium mb-1">Upload tree image</p>
+                      <p className="text-xs text-muted-foreground mb-4">PNG, JPG or JPEG (max. 5MB)</p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => document.getElementById('image-upload')?.click()}
+                      >
+                        Select Image
+                      </Button>
+                      <input
+                        id="image-upload"
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleImageChange}
+                      />
+                    </div>
+                  )
+                )}
+                
+                {formData.skipImageUpload && (
+                  <div className="p-4 border border-border rounded-lg bg-muted/30">
+                    <div className="flex items-center mb-3">
+                      <Image className="h-5 w-5 mr-2 text-nature-600" />
+                      <span className="font-medium">Image upload postponed</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      You can upload an image later by scanning the QR code or visiting the tree details page.
+                    </p>
                   </div>
                 )}
               </div>
