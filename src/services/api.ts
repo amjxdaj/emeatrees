@@ -1014,10 +1014,6 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
 
 export const uploadTreeImage = async (data: TreeImageUploadData): Promise<ApiResponse<Tree>> => {
   try {
-    // In a real implementation, you would upload the image to storage
-    // and then update the tree record with the new image URL
-    
-    // Mock implementation for now
     const { treeId, image } = data;
     
     // Get the current tree data
@@ -1033,8 +1029,19 @@ export const uploadTreeImage = async (data: TreeImageUploadData): Promise<ApiRes
       return { success: false, error: 'Tree not found' };
     }
     
-    // Create a temporary URL for the image
-    const imageUrl = URL.createObjectURL(image);
+    // In a real Supabase implementation, we would:
+    // 1. Upload the image to Supabase Storage
+    // 2. Get the public URL
+    // 3. Update the tree record with the URL
+    
+    // For now, we'll create a blob URL and store that
+    // This is a workaround since we can't actually upload to Supabase Storage in this demo
+    const blobUrl = URL.createObjectURL(image);
+    const fileExtension = image.name.split('.').pop() || 'jpg';
+    const fileName = `tree_${treeId}_${Date.now()}.${fileExtension}`;
+    
+    // In a real implementation, this would be a proper URL from Supabase Storage
+    const imageUrl = blobUrl;
     
     // Update the tree with the new image URL
     const { data: updatedTree, error: updateError } = await supabase
@@ -1143,4 +1150,3 @@ export const addPredefinedTrees = async (): Promise<ApiResponse<Tree[]>> => {
 };
 
 export default api;
-

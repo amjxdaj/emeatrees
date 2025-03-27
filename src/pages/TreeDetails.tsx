@@ -1,4 +1,3 @@
-
 import { useParams, Link } from 'react-router-dom';
 import { useTreeDetails } from '@/hooks/useTreeData';
 import { uploadTreeImage } from '@/services/api';
@@ -57,15 +56,23 @@ const TreeDetails = () => {
   };
   
   const handleImageUpload = async () => {
-    if (!imageFile || !id) return;
+    if (!imageFile || !id) {
+      toast.error('No image selected');
+      return;
+    }
     
     setUploading(true);
     
     try {
+      console.log('Uploading image:', imageFile);
+      console.log('For tree ID:', id);
+      
       const response = await uploadTreeImage({
         treeId: id,
         image: imageFile
       });
+      
+      console.log('Upload response:', response);
       
       if (response.success) {
         toast.success('Image uploaded successfully');
@@ -83,7 +90,7 @@ const TreeDetails = () => {
     }
   };
   
-  const needsImageUpload = tree && (tree.pendingImage || tree.imageUrl.includes('placeholder') || tree.imageUrl.includes('unsplash'));
+  const needsImageUpload = tree && (tree.pendingImage || !tree.imageUrl || tree.imageUrl.includes('placeholder') || tree.imageUrl.includes('unsplash'));
   
   return (
     <Layout hideAddButton>
