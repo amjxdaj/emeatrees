@@ -5,14 +5,6 @@ import TreeCard from '@/components/TreeCard';
 import SearchBar from '@/components/SearchBar';
 import TreeFilter from '@/components/TreeFilter';
 import { FilterOptions } from '@/types';
-import { 
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow 
-} from '@/components/ui/table';
 
 const TreesContainer = () => {
   const { 
@@ -74,39 +66,10 @@ const TreesContainer = () => {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Scientific Name</TableHead>
-                    <TableHead>Family</TableHead>
-                    <TableHead>Species</TableHead>
-                    <TableHead>Common Name (English)</TableHead>
-                    <TableHead>Common Name (Malayalam)</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Native Range</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {allTrees.map((tree) => (
-                    <TableRow key={tree.id}>
-                      <TableCell className="font-medium">
-                        <a href={`/tree/${tree.id}`} className="text-nature-600 hover:underline">
-                          {tree.name}
-                        </a>
-                      </TableCell>
-                      <TableCell className="italic">{tree.scientific_name}</TableCell>
-                      <TableCell>{tree.family}</TableCell>
-                      <TableCell>{tree.species}</TableCell>
-                      <TableCell>{tree.common_name_english || '-'}</TableCell>
-                      <TableCell>{tree.common_name_malayalam || '-'}</TableCell>
-                      <TableCell>{tree.location}</TableCell>
-                      <TableCell>{tree.native_range || '-'}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <div className="grid grid-cols-1 gap-4">
+              {allTrees.map((tree) => (
+                <TreeCard key={tree.id} tree={tree} />
+              ))}
             </div>
           )}
         </div>

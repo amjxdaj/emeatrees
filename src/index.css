@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -61,6 +60,14 @@
   .tree-card {
     @apply glass-card rounded-2xl transition-all duration-300 hover:shadow-md
     hover:translate-y-[-2px] hover:border-nature-200 animate-fade-in;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .tree-card:hover {
+    transform: translateY(-4px) rotateX(2deg) rotateY(2deg);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
   
   .page-container {
@@ -120,6 +127,7 @@
   
   .card-image-container {
     @apply relative overflow-hidden rounded-xl aspect-[4/3];
+    transform: translateZ(20px);
   }
   
   .card-image {

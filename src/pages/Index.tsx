@@ -10,7 +10,7 @@ const Index = () => {
           EMEA College Tree Collection
         </h1>
         <p className="text-muted-foreground">
-          Browse all tree species in the EMEA College campus. Click on any tree name to see detailed information.
+          Browse all tree species in the EMEA College campus. Click on any tree card to see detailed information.
         </p>
       </div>
       
