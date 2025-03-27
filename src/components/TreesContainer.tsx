@@ -4,7 +4,6 @@ import { useTreeData } from '@/hooks/useTreeData';
 import TreeCard from '@/components/TreeCard';
 import SearchBar from '@/components/SearchBar';
 import TreeFilter from '@/components/TreeFilter';
-import AddPredefinedTrees from '@/components/AddPredefinedTrees';
 import { FilterOptions } from '@/types';
 import { 
   Table,
@@ -40,10 +39,6 @@ const TreesContainer = () => {
 
   return (
     <div className="space-y-6">
-      <div className="mb-6">
-        <AddPredefinedTrees onSuccess={refreshTrees} />
-      </div>
-
       <SearchBar 
         onSearch={handleSearch} 
         initialValue={filters.searchQuery} 

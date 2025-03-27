@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import { ApiResponse, Tree, TreeFormData, TreeImageUploadData } from '../types';
 import { supabase } from '@/integrations/supabase/client';
@@ -945,18 +946,41 @@ export const getTree = async (id: string): Promise<ApiResponse<Tree>> => {
 
 export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>> => {
   try {
+    // Handle image upload if provided
+    let imageUrl = null;
+    
+    if (treeData.image && !treeData.skipImageUpload) {
+      const fileExt = treeData.image.name.split('.').pop() || 'jpg';
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `trees/${fileName}`;
+      
+      // Upload to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('trees')
+        .upload(filePath, treeData.image);
+      
+      if (uploadError) {
+        console.error('Image upload error:', uploadError);
+        // Continue with adding the tree, but without an image
+      } else if (uploadData) {
+        // Get the public URL
+        const { data } = supabase.storage.from('trees').getPublicUrl(filePath);
+        imageUrl = data.publicUrl;
+      }
+    }
+    
     // Prepare the data for Supabase
     const treeRecord = {
-      name: treeData.name,
-      scientific_name: treeData.scientific_name,
-      family: treeData.family,
+      name: treeData.name || '',
+      scientific_name: treeData.scientific_name || '',
+      family: treeData.family || '',
       common_name_english: treeData.common_name_english || '',
       common_name_malayalam: treeData.common_name_malayalam || null,
       native_range: treeData.native_range || null,
-      species: treeData.species,
-      location: treeData.location,
+      species: treeData.species || '',
+      location: treeData.location || 'EMEA College',
       description: treeData.description || null,
-      image_url: treeData.skipImageUpload ? null : (treeData.image ? URL.createObjectURL(treeData.image) : null)
+      image_url: imageUrl
     };
     
     // Insert into Supabase
@@ -982,7 +1006,7 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
         description: data.description || '',
         imageUrl: data.image_url || 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
         addedDate: new Date(data.added_date).toISOString().split('T')[0],
-        pendingImage: treeData.skipImageUpload || !treeData.image
+        pendingImage: !data.image_url
       };
       
       return { success: true, data: newTree };
@@ -1029,19 +1053,23 @@ export const uploadTreeImage = async (data: TreeImageUploadData): Promise<ApiRes
       return { success: false, error: 'Tree not found' };
     }
     
-    // In a real Supabase implementation, we would:
-    // 1. Upload the image to Supabase Storage
-    // 2. Get the public URL
-    // 3. Update the tree record with the URL
+    // Upload the image to Supabase Storage
+    const fileExt = image.name.split('.').pop() || 'jpg';
+    const fileName = `tree_${treeId}_${Date.now()}.${fileExt}`;
+    const filePath = `trees/${fileName}`;
     
-    // For now, we'll create a blob URL and store that
-    // This is a workaround since we can't actually upload to Supabase Storage in this demo
-    const blobUrl = URL.createObjectURL(image);
-    const fileExtension = image.name.split('.').pop() || 'jpg';
-    const fileName = `tree_${treeId}_${Date.now()}.${fileExtension}`;
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('trees')
+      .upload(filePath, image);
     
-    // In a real implementation, this would be a proper URL from Supabase Storage
-    const imageUrl = blobUrl;
+    if (uploadError) {
+      console.error('Image upload error:', uploadError);
+      return { success: false, error: `Image upload failed: ${uploadError.message}` };
+    }
+    
+    // Get the public URL for the uploaded image
+    const { data: urlData } = supabase.storage.from('trees').getPublicUrl(filePath);
+    const imageUrl = urlData.publicUrl;
     
     // Update the tree with the new image URL
     const { data: updatedTree, error: updateError } = await supabase
