@@ -6,10 +6,19 @@ import SearchBar from '@/components/SearchBar';
 import TreeFilter from '@/components/TreeFilter';
 import AddPredefinedTrees from '@/components/AddPredefinedTrees';
 import { FilterOptions } from '@/types';
+import { 
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow 
+} from '@/components/ui/table';
 
 const TreesContainer = () => {
   const { 
     trees, 
+    allTrees,
     loading, 
     error, 
     filters, 
@@ -62,20 +71,47 @@ const TreesContainer = () => {
               <p className="text-destructive mb-2">Error loading trees</p>
               <p className="text-muted-foreground text-sm">{error}</p>
             </div>
-          ) : trees.length === 0 ? (
+          ) : allTrees.length === 0 ? (
             <div className="text-center p-8 border border-border rounded-lg">
               <h3 className="text-lg font-medium mb-2">No trees found</h3>
               <p className="text-muted-foreground mb-6">
-                {filters.searchQuery || filters.species || filters.location || filters.family
-                  ? "No trees match your search criteria. Try adjusting your filters."
-                  : "No trees have been added yet. Add your first tree to get started."}
+                No trees have been added yet. Add your first tree to get started.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {trees.map(tree => (
-                <TreeCard key={tree.id} tree={tree} />
-              ))}
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Scientific Name</TableHead>
+                    <TableHead>Family</TableHead>
+                    <TableHead>Species</TableHead>
+                    <TableHead>Common Name (English)</TableHead>
+                    <TableHead>Common Name (Malayalam)</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Native Range</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {allTrees.map((tree) => (
+                    <TableRow key={tree.id}>
+                      <TableCell className="font-medium">
+                        <a href={`/tree/${tree.id}`} className="text-nature-600 hover:underline">
+                          {tree.name}
+                        </a>
+                      </TableCell>
+                      <TableCell className="italic">{tree.scientific_name}</TableCell>
+                      <TableCell>{tree.family}</TableCell>
+                      <TableCell>{tree.species}</TableCell>
+                      <TableCell>{tree.common_name_english || '-'}</TableCell>
+                      <TableCell>{tree.common_name_malayalam || '-'}</TableCell>
+                      <TableCell>{tree.location}</TableCell>
+                      <TableCell>{tree.native_range || '-'}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           )}
         </div>
