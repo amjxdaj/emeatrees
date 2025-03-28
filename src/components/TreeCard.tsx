@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { Info, Leaf } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Tree } from '@/types';

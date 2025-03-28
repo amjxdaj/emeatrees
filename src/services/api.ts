@@ -111,9 +111,9 @@ export const getTrees = async (): Promise<ApiResponse<Tree[]>> => {
         species: tree.species,
         location: tree.location,
         description: tree.description || '',
-        imageUrl: tree.image_url || 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
+        imageUrl: tree.image_url || '',
         addedDate: new Date(tree.added_date).toISOString().split('T')[0],
-        pendingImage: !tree.image_url || tree.image_url.includes('placeholder') || tree.image_url.includes('unsplash'),
+        pendingImage: !tree.image_url,
       }));
       return { success: true, data: formattedTrees };
     }
@@ -150,9 +150,9 @@ export const getTree = async (id: string): Promise<ApiResponse<Tree>> => {
         species: data.species,
         location: data.location,
         description: data.description || '',
-        imageUrl: data.image_url || 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
+        imageUrl: data.image_url || '',
         addedDate: new Date(data.added_date).toISOString().split('T')[0],
-        pendingImage: !data.image_url || data.image_url.includes('placeholder') || data.image_url.includes('unsplash'),
+        pendingImage: !data.image_url,
       };
       return { success: true, data: formattedTree };
     }
@@ -229,7 +229,7 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
         species: data.species,
         location: data.location,
         description: data.description || '',
-        imageUrl: data.image_url || 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
+        imageUrl: data.image_url || '',
         addedDate: new Date(data.added_date).toISOString().split('T')[0],
         pendingImage: !data.image_url
       };
@@ -249,7 +249,7 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
       species: treeData.species,
       location: treeData.location,
       description: treeData.description || '',
-      imageUrl: treeData.skipImageUpload ? 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86' : (treeData.image ? URL.createObjectURL(treeData.image) : 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86'),
+      imageUrl: treeData.skipImageUpload ? '' : (treeData.image ? URL.createObjectURL(treeData.image) : ''),
       addedDate: new Date().toISOString().split('T')[0],
       pendingImage: treeData.skipImageUpload || !treeData.image
     };
