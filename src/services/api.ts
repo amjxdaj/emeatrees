@@ -2,10 +2,8 @@ import axios from 'axios';
 import { ApiResponse, Tree, TreeFormData, TreeImageUploadData } from '../types';
 import { supabase } from '@/integrations/supabase/client';
 
-// This would normally point to your backend API
 const API_BASE_URL = 'https://api.example.com';
 
-// Mock data for development
 const MOCK_TREES: Tree[] = [
   {
     id: '1',
@@ -79,7 +77,6 @@ const MOCK_TREES: Tree[] = [
   }
 ];
 
-// Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -87,17 +84,14 @@ const api = axios.create({
   },
 });
 
-// API Functions
 export const getTrees = async (): Promise<ApiResponse<Tree[]>> => {
   try {
-    // Get trees from Supabase
     const { data, error } = await supabase
       .from('trees')
       .select('*');
     
     if (error) throw error;
     
-    // If data is available from Supabase, use it
     if (data && data.length > 0) {
       const formattedTrees = data.map(tree => ({
         ...tree,
@@ -118,7 +112,6 @@ export const getTrees = async (): Promise<ApiResponse<Tree[]>> => {
       return { success: true, data: formattedTrees };
     }
     
-    // Fall back to mock data if no data in Supabase
     return { success: true, data: MOCK_TREES };
   } catch (error) {
     console.error('Error fetching trees:', error);
@@ -128,7 +121,6 @@ export const getTrees = async (): Promise<ApiResponse<Tree[]>> => {
 
 export const getTree = async (id: string): Promise<ApiResponse<Tree>> => {
   try {
-    // Try to get tree from Supabase
     const { data, error } = await supabase
       .from('trees')
       .select('*')
@@ -137,7 +129,6 @@ export const getTree = async (id: string): Promise<ApiResponse<Tree>> => {
     
     if (error && error.code !== 'PGRST116') throw error;
     
-    // If found in Supabase, return it
     if (data) {
       const formattedTree = {
         id: data.id,
@@ -157,7 +148,6 @@ export const getTree = async (id: string): Promise<ApiResponse<Tree>> => {
       return { success: true, data: formattedTree };
     }
     
-    // Fall back to mock data
     const tree = MOCK_TREES.find(t => t.id === id);
     if (!tree) {
       return { success: false, error: 'Tree not found' };
@@ -171,7 +161,6 @@ export const getTree = async (id: string): Promise<ApiResponse<Tree>> => {
 
 export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>> => {
   try {
-    // Handle image upload if provided
     let imageUrl = null;
     
     if (treeData.image && !treeData.skipImageUpload) {
@@ -179,7 +168,6 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
       
-      // Upload to Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('trees')
         .upload(filePath, treeData.image);
@@ -188,13 +176,11 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
         console.error('Image upload error:', uploadError);
         // Continue with adding the tree, but without an image
       } else if (uploadData) {
-        // Get the public URL
         const { data } = supabase.storage.from('trees').getPublicUrl(filePath);
         imageUrl = data.publicUrl;
       }
     }
     
-    // Prepare the data for Supabase
     const treeRecord = {
       name: treeData.name || '',
       scientific_name: treeData.scientific_name || '',
@@ -208,7 +194,6 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
       image_url: imageUrl
     };
     
-    // Insert into Supabase
     const { data, error } = await supabase
       .from('trees')
       .insert(treeRecord)
@@ -237,7 +222,6 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
       return { success: true, data: newTree };
     }
     
-    // Fallback to mock implementation
     const newTree: Tree = {
       id: String(Date.now()),
       name: treeData.name,
@@ -267,7 +251,6 @@ export const uploadTreeImage = async (data: TreeImageUploadData): Promise<ApiRes
     
     console.log('Starting image upload for tree ID:', treeId);
     
-    // Get the current tree data
     const { data: treeData, error: fetchError } = await supabase
       .from('trees')
       .select('*')
@@ -284,7 +267,22 @@ export const uploadTreeImage = async (data: TreeImageUploadData): Promise<ApiRes
       return { success: false, error: 'Tree not found' };
     }
     
-    // Upload the image to Supabase Storage
+    if (treeData.image_url) {
+      const urlParts = treeData.image_url.split('/');
+      const oldFileName = urlParts[urlParts.length - 1];
+      
+      if (oldFileName) {
+        console.log('Removing old image:', oldFileName);
+        const { error: removeError } = await supabase.storage
+          .from('trees')
+          .remove([oldFileName]);
+          
+        if (removeError) {
+          console.warn('Error removing old image, continuing anyway:', removeError);
+        }
+      }
+    }
+    
     const fileExt = image.name.split('.').pop() || 'jpg';
     const fileName = `tree_${treeId}_${Date.now()}.${fileExt}`;
     const filePath = `${fileName}`;
@@ -302,13 +300,11 @@ export const uploadTreeImage = async (data: TreeImageUploadData): Promise<ApiRes
     
     console.log('Upload successful, upload data:', uploadData);
     
-    // Get the public URL for the uploaded image
     const { data: urlData } = supabase.storage.from('trees').getPublicUrl(filePath);
     const imageUrl = urlData.publicUrl;
     
     console.log('Image URL:', imageUrl);
     
-    // Update the tree with the new image URL
     const { data: updatedTree, error: updateError } = await supabase
       .from('trees')
       .update({ image_url: imageUrl })

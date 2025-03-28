@@ -1,8 +1,10 @@
 
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, ListFilter, PlusCircle } from 'lucide-react';
+import { Home, ListFilter, PlusCircle, LogOut } from 'lucide-react';
+import { useAdmin } from '@/contexts/AdminContext';
 import FloatingActionButton from './FloatingActionButton';
+import { Button } from './ui/button';
 
 interface LayoutProps {
   children: ReactNode;
@@ -12,6 +14,7 @@ interface LayoutProps {
 const Layout = ({ children, hideAddButton = false }: LayoutProps) => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const { isAdmin, logout } = useAdmin();
   
   return (
     <div className="min-h-screen flex flex-col pb-20">
@@ -26,11 +29,20 @@ const Layout = ({ children, hideAddButton = false }: LayoutProps) => {
                 <path d="M11.93 12.45a4.84 4.84 0 0 1-3.66 1.55 1 1 0 0 1 0-3 2.84 2.84 0 0 0 2.16-.88"/>
               </svg>
             </div>
-            <span className="font-display font-bold tracking-tight text-lg">TreeTrove</span>
+            <span className="font-display font-bold tracking-tight text-lg">emeaTrees</span>
           </Link>
           
-          <div className="text-sm font-medium text-muted-foreground">
-            EMEA College
+          <div className="flex items-center gap-4">
+            <div className="text-sm font-medium text-muted-foreground">
+              EMEA College
+            </div>
+            
+            {isAdmin && (
+              <Button variant="outline" size="sm" onClick={logout}>
+                <LogOut className="h-4 w-4 mr-1" />
+                Logout
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -49,7 +61,10 @@ const Layout = ({ children, hideAddButton = false }: LayoutProps) => {
           <span>Home</span>
         </Link>
         
-        <Link to="/add-tree" className={`nav-item ${currentPath === '/add-tree' ? 'active' : ''}`}>
+        <Link 
+          to={isAdmin ? "/add-tree" : "/admin-login"} 
+          className={`nav-item ${currentPath === '/add-tree' ? 'active' : ''}`}
+        >
           <PlusCircle className="h-5 w-5 mb-1" />
           <span>Add Tree</span>
         </Link>

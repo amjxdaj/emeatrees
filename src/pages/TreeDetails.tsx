@@ -38,15 +38,12 @@ const TreeDetails = () => {
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <h1 className="text-3xl font-display font-bold tracking-tight">
-                  {tree.name}
-                </h1>
-                <p className="text-xl italic text-muted-foreground">
                   {tree.scientific_name}
+                </h1>
+                <p className="text-xl text-muted-foreground">
+                  {tree.family}
                 </p>
               </div>
-              <Link to="/add-tree">
-                <Button size="sm">Add Another Tree</Button>
-              </Link>
             </div>
           </>
         ) : null}
@@ -135,16 +132,6 @@ const TreeDetails = () => {
                   )}
                 </div>
               </div>
-              
-              <div>
-                <h2 className="text-xl font-display font-semibold mb-3">
-                  About this tree
-                </h2>
-                <Separator className="mb-4" />
-                <p className="text-muted-foreground whitespace-pre-line">
-                  {tree.description || "No description available for this tree."}
-                </p>
-              </div>
             </div>
           </div>
           
@@ -159,7 +146,7 @@ const TreeDetails = () => {
                 This QR code links directly to this tree's page. You can print this QR code and place it near the tree for easy access to information.
               </p>
               <p>
-                When scanned, visitors will be taken directly to this page where they can learn more about {tree.name}.
+                When scanned, visitors will be taken directly to this page where they can learn more about {tree.scientific_name}.
               </p>
             </div>
           </div>
