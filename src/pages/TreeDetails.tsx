@@ -17,20 +17,17 @@ const TreeDetails = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   
-  // Get the absolute URL for this page
   const currentUrl = `${window.location.origin}/tree/${id}`;
   
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     
     if (file) {
-      // Check if file is an image
       if (!file.type.match('image.*')) {
         toast.error('Please select an image file');
         return;
       }
       
-      // Check file size (limit to 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast.error('Image size should be less than 5MB');
         return;
@@ -38,7 +35,6 @@ const TreeDetails = () => {
       
       setImageFile(file);
       
-      // Create image preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -90,7 +86,7 @@ const TreeDetails = () => {
     }
   };
   
-  const needsImageUpload = tree && (tree.pendingImage || !tree.imageUrl || tree.imageUrl.includes('placeholder') || tree.imageUrl.includes('unsplash'));
+  const needsImageUpload = tree && (tree.pendingImage || !tree.imageUrl);
   
   return (
     <Layout hideAddButton>

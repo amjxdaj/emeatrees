@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { Info, Upload, Leaf } from 'lucide-react';
+import { Info, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Tree } from '@/types';
@@ -13,31 +13,14 @@ const TreeCard = ({ tree }: TreeCardProps) => {
   return (
     <Link to={`/tree/${tree.id}`} className="block w-full">
       <Card className="tree-card transform transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg">
-        <div className="card-image-container rounded-t-lg overflow-hidden h-48">
-          {tree.imageUrl ? (
-            <img 
-              src={tree.imageUrl} 
-              alt={tree.name} 
-              className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-nature-100 to-nature-200">
-              <Leaf className="h-12 w-12 text-nature-500 opacity-50" />
-            </div>
-          )}
-          <div className="absolute top-3 right-3">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/80 backdrop-blur-sm text-nature-800">
-              {tree.species}
-            </span>
-          </div>
-        </div>
-        
         <CardContent className="pt-4">
           <div className="flex justify-between items-start mb-1">
             <h3 className="text-xl font-semibold tracking-tight line-clamp-1">
               {tree.name}
             </h3>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-nature-100 text-nature-800">
+              {tree.species}
+            </span>
           </div>
           
           <div className="flex flex-col space-y-1 mb-2">
