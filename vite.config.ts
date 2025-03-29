@@ -23,6 +23,6 @@ export default defineConfig(({ mode }) => ({
   },
   // 🔥 Fixes 404 on direct page access
   esbuild: {
-    jsxInject: `import React from 'react'`,
+    jsxInject: "", // 🔥 Disable automatic React import
   },
 }));
