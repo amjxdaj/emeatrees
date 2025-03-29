@@ -40,10 +40,8 @@ export type Database = {
           id: string
           image_url: string | null
           location: string
-          name: string
           native_range: string | null
           scientific_name: string
-          species: string
         }
         Insert: {
           added_date?: string
@@ -54,10 +52,8 @@ export type Database = {
           id?: string
           image_url?: string | null
           location: string
-          name: string
           native_range?: string | null
           scientific_name: string
-          species: string
         }
         Update: {
           added_date?: string
@@ -68,10 +64,8 @@ export type Database = {
           id?: string
           image_url?: string | null
           location?: string
-          name?: string
           native_range?: string | null
           scientific_name?: string
-          species?: string
         }
         Relationships: []
       }

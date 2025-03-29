@@ -1,7 +1,7 @@
 
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, ListFilter, PlusCircle, LogOut } from 'lucide-react';
+import { Home, PlusCircle, LogOut } from 'lucide-react';
 import { useAdmin } from '@/contexts/AdminContext';
 import FloatingActionButton from './FloatingActionButton';
 import { Button } from './ui/button';
@@ -68,11 +68,6 @@ const Layout = ({ children, hideAddButton = false }: LayoutProps) => {
           <PlusCircle className="h-5 w-5 mb-1" />
           <span>Add Tree</span>
         </Link>
-        
-        <a href="#filter" className="nav-item">
-          <ListFilter className="h-5 w-5 mb-1" />
-          <span>Filter</span>
-        </a>
       </nav>
     </div>
   );
