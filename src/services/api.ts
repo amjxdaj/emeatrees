@@ -349,4 +349,50 @@ export const uploadTreeImage = async (data: TreeImageUploadData): Promise<ApiRes
   }
 };
 
+export const deleteTree = async (id: string): Promise<ApiResponse<boolean>> => {
+  try {
+    // First, get the tree details to check if there's an image to delete
+    const { data: treeData, error: fetchError } = await supabase
+      .from('trees')
+      .select('image_url')
+      .eq('id', id)
+      .single();
+      
+    if (fetchError && fetchError.code !== 'PGRST116') {
+      console.error('Error fetching tree data for deletion:', fetchError);
+      throw fetchError;
+    }
+    
+    // If the tree has an image, delete it from storage
+    if (treeData?.image_url) {
+      const urlParts = treeData.image_url.split('/');
+      const fileName = urlParts[urlParts.length - 1];
+      
+      if (fileName) {
+        console.log('Removing tree image:', fileName);
+        const { error: removeError } = await supabase.storage
+          .from('trees')
+          .remove([fileName]);
+          
+        if (removeError) {
+          console.warn('Error removing tree image, continuing with tree deletion:', removeError);
+        }
+      }
+    }
+    
+    // Delete the tree from the database
+    const { error: deleteError } = await supabase
+      .from('trees')
+      .delete()
+      .eq('id', id);
+      
+    if (deleteError) throw deleteError;
+    
+    return { success: true, data: true };
+  } catch (error) {
+    console.error('Error deleting tree:', error);
+    return { success: false, error: 'Failed to delete tree' };
+  }
+};
+
 export default api;

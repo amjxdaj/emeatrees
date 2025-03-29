@@ -29,6 +29,10 @@ const TreesContainer = () => {
     updateFilters(newFilters);
   };
 
+  const handleDeleteTree = () => {
+    refreshTrees();
+  };
+
   return (
     <div className="space-y-6">
       <SearchBar 
@@ -70,7 +74,7 @@ const TreesContainer = () => {
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {trees.map((tree) => (
-                <TreeCard key={tree.id} tree={tree} />
+                <TreeCard key={tree.id} tree={tree} onDelete={handleDeleteTree} />
               ))}
             </div>
           )}

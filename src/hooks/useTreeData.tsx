@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { getTrees, getTree } from '../services/api';
+import { getTrees, getTree, deleteTree } from '../services/api';
 import { Tree, FilterOptions } from '../types';
 import { toast } from 'sonner';
 
@@ -15,7 +15,16 @@ export const useTreeData = (initialFilters?: FilterOptions) => {
     const response = await getTrees();
     
     if (response.success && response.data) {
-      setTrees(response.data);
+      // Remove duplicate trees by scientific_name
+      const uniqueTrees = response.data.reduce((acc: Tree[], current) => {
+        const isDuplicate = acc.find((item) => item.scientific_name === current.scientific_name);
+        if (!isDuplicate) {
+          return [...acc, current];
+        }
+        return acc;
+      }, []);
+      
+      setTrees(uniqueTrees);
       setError(null);
     } else {
       setError(response.error || 'Failed to fetch trees');
