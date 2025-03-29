@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { ApiResponse, Tree, TreeFormData, TreeImageUploadData } from '../types';
 import { supabase } from '@/integrations/supabase/client';
@@ -95,15 +94,14 @@ export const getTrees = async (): Promise<ApiResponse<Tree[]>> => {
     
     if (data && data.length > 0) {
       const formattedTrees = data.map(tree => ({
-        ...tree,
         id: tree.id,
-        name: tree.name,
+        name: tree.scientific_name,
         scientific_name: tree.scientific_name,
         family: tree.family,
         common_name_english: tree.common_name_english,
         common_name_malayalam: tree.common_name_malayalam || undefined,
         native_range: tree.native_range || undefined,
-        species: tree.species,
+        species: tree.scientific_name,
         location: tree.location,
         description: tree.description || '',
         imageUrl: tree.image_url || '',
@@ -111,7 +109,6 @@ export const getTrees = async (): Promise<ApiResponse<Tree[]>> => {
         pendingImage: !tree.image_url,
       }));
       
-      // Remove duplicate trees by scientific_name to ensure clean data
       const uniqueTrees = formattedTrees.reduce((acc: Tree[], current) => {
         const isDuplicate = acc.find((item) => item.scientific_name === current.scientific_name);
         if (!isDuplicate) {
@@ -143,13 +140,13 @@ export const getTree = async (id: string): Promise<ApiResponse<Tree>> => {
     if (data) {
       const formattedTree = {
         id: data.id,
-        name: data.name,
+        name: data.scientific_name,
         scientific_name: data.scientific_name,
         family: data.family,
         common_name_english: data.common_name_english,
         common_name_malayalam: data.common_name_malayalam || undefined,
         native_range: data.native_range || undefined,
-        species: data.species,
+        species: data.scientific_name,
         location: data.location,
         description: data.description || '',
         imageUrl: data.image_url || '',
@@ -193,13 +190,11 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
     }
     
     const treeRecord = {
-      name: treeData.name || '',
       scientific_name: treeData.scientific_name || '',
       family: treeData.family || '',
       common_name_english: treeData.common_name_english || '',
       common_name_malayalam: treeData.common_name_malayalam || null,
       native_range: treeData.native_range || null,
-      species: treeData.species || '',
       location: treeData.location || 'EMEA College',
       description: treeData.description || null,
       image_url: imageUrl
@@ -216,13 +211,13 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
     if (data) {
       const newTree: Tree = {
         id: data.id,
-        name: data.name,
+        name: data.scientific_name,
         scientific_name: data.scientific_name,
         family: data.family,
         common_name_english: data.common_name_english,
         common_name_malayalam: data.common_name_malayalam,
         native_range: data.native_range,
-        species: data.species,
+        species: data.scientific_name,
         location: data.location,
         description: data.description || '',
         imageUrl: data.image_url || '',
@@ -235,13 +230,13 @@ export const addTree = async (treeData: TreeFormData): Promise<ApiResponse<Tree>
     
     const newTree: Tree = {
       id: String(Date.now()),
-      name: treeData.name,
+      name: treeData.scientific_name,
       scientific_name: treeData.scientific_name,
       family: treeData.family,
       common_name_english: treeData.common_name_english,
       common_name_malayalam: treeData.common_name_malayalam,
       native_range: treeData.native_range,
-      species: treeData.species,
+      species: treeData.scientific_name,
       location: treeData.location,
       description: treeData.description || '',
       imageUrl: treeData.skipImageUpload ? '' : (treeData.image ? URL.createObjectURL(treeData.image) : ''),
@@ -333,13 +328,13 @@ export const uploadTreeImage = async (data: TreeImageUploadData): Promise<ApiRes
     if (updatedTree) {
       const tree: Tree = {
         id: updatedTree.id,
-        name: updatedTree.name,
+        name: updatedTree.scientific_name,
         scientific_name: updatedTree.scientific_name,
         family: updatedTree.family,
         common_name_english: updatedTree.common_name_english,
         common_name_malayalam: updatedTree.common_name_malayalam,
         native_range: updatedTree.native_range,
-        species: updatedTree.species,
+        species: updatedTree.scientific_name,
         location: updatedTree.location,
         description: updatedTree.description || '',
         imageUrl: updatedTree.image_url || imageUrl,
@@ -362,7 +357,6 @@ export const uploadTreeImage = async (data: TreeImageUploadData): Promise<ApiRes
 
 export const deleteTree = async (id: string): Promise<ApiResponse<boolean>> => {
   try {
-    // First, get the tree details to check if there's an image to delete
     const { data: treeData, error: fetchError } = await supabase
       .from('trees')
       .select('image_url')
@@ -374,7 +368,6 @@ export const deleteTree = async (id: string): Promise<ApiResponse<boolean>> => {
       throw fetchError;
     }
     
-    // If the tree has an image, delete it from storage
     if (treeData?.image_url) {
       const urlParts = treeData.image_url.split('/');
       const fileName = urlParts[urlParts.length - 1];
@@ -391,7 +384,6 @@ export const deleteTree = async (id: string): Promise<ApiResponse<boolean>> => {
       }
     }
     
-    // Delete the tree from the database
     const { error: deleteError } = await supabase
       .from('trees')
       .delete()
