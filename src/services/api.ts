@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import { ApiResponse, Tree, TreeFormData, TreeImageUploadData } from '../types';
 import { supabase } from '@/integrations/supabase/client';
@@ -109,7 +110,17 @@ export const getTrees = async (): Promise<ApiResponse<Tree[]>> => {
         addedDate: new Date(tree.added_date).toISOString().split('T')[0],
         pendingImage: !tree.image_url,
       }));
-      return { success: true, data: formattedTrees };
+      
+      // Remove duplicate trees by scientific_name to ensure clean data
+      const uniqueTrees = formattedTrees.reduce((acc: Tree[], current) => {
+        const isDuplicate = acc.find((item) => item.scientific_name === current.scientific_name);
+        if (!isDuplicate) {
+          return [...acc, current];
+        }
+        return acc;
+      }, []);
+      
+      return { success: true, data: uniqueTrees };
     }
     
     return { success: true, data: MOCK_TREES };
